@@ -14,6 +14,9 @@ class User(db.Model, SerializerMixin):
     name = Column(String, nullable = False)
     _password_hash = Column(String, nullable = False)
     email = Column(String, nullable = False, unique = True)
+
+    puzzles = relationship("Puzzle", back_populates="user")
+    upattempts = relationship("UPAttempt", back_populates="user")
   
 
     def __repr__(self):
@@ -49,6 +52,9 @@ class Puzzle(db.Model, SerializerMixin):
     id = Column(Integer, primary_key = True)
     name = Column(String, nullable = False)
     user_id = Column(Integer, ForeignKey("users.id"))
+
+    words = relationship("Word", back_populates = "puzzle")
+    user = relationship("User", back_populates = "puzzles")
    
 
 class Word(db.Model, SerializerMixin):
@@ -62,6 +68,8 @@ class Word(db.Model, SerializerMixin):
     column_index = Column(Integer)
     puzzle_id = Column(Integer, ForeignKey("puzzles.id"))
 
+    puzzle = relationship("Puzzle", back_populates="words")
+
 
 class UPAttempt(db.Model, SerializerMixin):
     __tablename__ = "upattempts"
@@ -69,6 +77,10 @@ class UPAttempt(db.Model, SerializerMixin):
     id = Column(Integer, primary_key = True)
     puzzle_id = Column(Integer, ForeignKey("puzzles.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
+
+    guesses = relationship("Guess", back_populates="upattempt")
+    user = relationship("User", back_populates="upattempts")
+
 
 class Guess(db.Model, SerializerMixin):
     __tablename__ = "guesses"
@@ -79,6 +91,8 @@ class Guess(db.Model, SerializerMixin):
     row_index = Column(Integer)
     column_index = Column(Integer)
     upattempt_id = Column(Integer, ForeignKey("upattempts.id"))
+
+    upattempt = relationship("UPAttempt", back_populates="guesses")
 
 
 

@@ -52,3 +52,7 @@ def logout():
             return {}, 204
 
         return {"error": "not logged in"}, 401
+    
+
+if __name__ == '__main__':
+    app.run(port=5555, debug=True)
