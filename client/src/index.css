@@ -67,3 +67,27 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+#grid2 {
+  width: 700px;
+  height: 700px;
+  /* border: solid;
+  border-width: 1px */
+}
+
+#gridrows {
+  border: solid;
+  border-width: 1px;
+  width: 700px;
+  height: 35px;
+  border-bottom: none;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr)
+}
+
+#gridcell {
+  border: solid;
+  border-width: 1px;
+  border-top: none;
+  border-bottom: none
+}

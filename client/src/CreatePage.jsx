@@ -1,10 +1,10 @@
-import Grid from "./Grid"
+import Grid2 from "./Grid2"
 
 function CreatePage() {
     return(
         <>
         <div>create page</div>
-        <Grid />
+        <Grid2 />
         </>
     )
 }
