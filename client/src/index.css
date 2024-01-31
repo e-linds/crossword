@@ -18,7 +18,7 @@
 
 :root, body {
   font-family: 'Inconsolata', monospace;
-  max-width: 1280px;
+  /* max-width: 1280px; */
   min-width: 1000px;
   margin: 25px
 
@@ -105,15 +105,17 @@ button:focus-visible {
 
 #createpage-container {
   display: grid;
-  grid-template-columns: 3fr 1fr;
-  column-gap: 50px
+  grid-template-columns: .75fr 2fr 1fr;
+  column-gap: 20px;
+  /* justify-items: center */
   
 }
 
 #create-details {
   border: solid;
   border: 2px;
-  height: 100%
+  height: 100%;
+  margin-left: 15px
 }
 
 #newword-form {
@@ -122,8 +124,15 @@ button:focus-visible {
  
 }
 
+#newword-form button {
+  padding: 6px 7px
+}
+
 #newword-form * {
   font-family: 'Inconsolata', monospace;
+  font-size: 15px;
+  margin: 7px;
+  color: black
 
 }
 

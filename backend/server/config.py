@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from sqlalchemy import MetaData
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -24,4 +26,6 @@ bcrypt = Bcrypt(app)
 api = Api(app)
 
 CORS(app)
+
+app.secret_key = os.environ.get("secret_key")
 

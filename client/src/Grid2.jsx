@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import GridCell from "./GridCell"
 
-function Grid2 ({ wordInput }) {
-    const [selectedCells, setSelectedCells] = useState([])
+function Grid2 ({ wordInput, selectedCells, setSelectedCells }) {
+    
 
     const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", 'j', 'k', "l", "m", "n", "o", "p", "q", "r", "s"]
     let row_index

@@ -13,7 +13,7 @@ class User(db.Model, SerializerMixin):
     id = Column(Integer, primary_key = True)
     name = Column(String, nullable = False)
     _password_hash = Column(String, nullable = False)
-    email = Column(String, nullable = False, unique = True)
+    email = Column(String, nullable = False)
 
     puzzles = relationship("Puzzle", back_populates="user")
     upattempts = relationship("UPAttempt", back_populates="user")

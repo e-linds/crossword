@@ -95,8 +95,11 @@ if __name__ == '__main__':
 
         print("Clearing database...")
 
+        User.query.delete()
         Word.query.delete()
         Puzzle.query.delete()
+        Guess.query.delete()
+        UPAttempt.query.delete()
 
         
         print("Starting seed...")

@@ -41,6 +41,8 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
         setSelected(!selected)
         //sum of row index plus column index is [0] in position for easier sorting later
 
+        if (selectedCells) {
+
         const exists = selectedCells.find(each => each[1] === position[1] && each[2] === position[2])
 
         if (exists) {
@@ -54,10 +56,12 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
             const array = [...selectedCells, position]
             sortArray(array)
             setSelectedCells(array)
-        }
+        }}
     }
 
     function addLetters() {
+
+        if (selectedCells) {
 
         const exists = selectedCells.find(each => each[1] === position[1] && each[2] === position[2])
 
@@ -75,7 +79,7 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
                 setLetter("")
             }
 
-        }
+        }}
 
     }
 
