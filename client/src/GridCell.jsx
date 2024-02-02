@@ -4,12 +4,17 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wordInput, savedWords }) {
+function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wordInput, savedWords, letterPositions }) {
     const [selected, setSelected] = useState(false)
     const [letter, setLetter] = useState("")
     // const { DragSelection } = useSelectionContainer()
 
     const position = [(row_index + column_index), row_index, column_index]
+    
+
+    useEffect(() => {
+        displaySavedWords()
+    }, [letterPositions, letter])
 
     useEffect(() => {
         addLetters()
@@ -17,7 +22,7 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
 
     let cellStyle
 
-    if (selected === false) {
+    if (selected === false || selectedCells.length === 0) {
         cellStyle = {
             backgroundColor: "white"
         }
@@ -37,10 +42,10 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
     }
 
 
-    function handleClick() {
+    function handleCellClick() {
         setSelected(!selected)
         //sum of row index plus column index is [0] in position for easier sorting later
-
+        console.log(position)
         if (selectedCells) {
 
         const exists = selectedCells.find(each => each[1] === position[1] && each[2] === position[2])
@@ -84,28 +89,24 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
 
     }
 
-    // function displaySavedWords() {
+   function displaySavedWords() {
 
-    //     for (const each in savedWords) {
-    //         if (savedWords[each].row_index === row_index && savedWords[each].column_index === column_index) {
+    // console.log(letterPositions)
 
-    //             console.log(`${savedWords[each].row_index} ${savedWords[each].column_index}`)
+    const positionToMatch = position.slice(1).toString().replaceAll(",", " ")
+    const letterToDisplay = letterPositions[`${positionToMatch}`]
+    // console.log(positionToMatch)
+    // console.log(letterToDisplay)
 
-    //         }
-            
-    //     }
+    setLetter(letterToDisplay ? letterToDisplay : "")
 
-
-    // }
-
-    // displaySavedWords()
-
+   }
 
  
     return(
         <>
         {/* <DragSelection /> */}
-        <div id="gridcell" onClick={handleClick} style={cellStyle}>{letter}</div>
+        <div id="gridcell" onClick={handleCellClick} style={cellStyle}>{letter}</div>
         </>
     )
 }

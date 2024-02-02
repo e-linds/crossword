@@ -44,8 +44,26 @@ function App() {
   }
   }, [user])
 
+  function deletePuzzle(id) {
+
+    const puzzleToRemove = userPuzzles.find((each) => each.id === id)
+    const index = userPuzzles.indexOf(puzzleToRemove)
+
+    fetch(`/api/puzzles/${id}`, {
+      method: "DELETE"
+    })
+    .then(r => {})
+    .then(data => {
+
+      let array = userPuzzles
+      array.splice(index, 1)
+      setUserPuzzles(array)
+    })
+
+  }
 
 
+console.log(userPuzzles)
   
   return(
     <>
@@ -56,11 +74,11 @@ function App() {
     <Routes>
       <Route path='/home' element={<Home user={user} setUser={setUser}/>}/>
       <Route path='/create' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles}/>}/>
-      <Route path='/create/:puzzleid' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles}/>}/>
+      <Route path='/create/:puzzleid' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles} deletePuzzle={deletePuzzle}/>}/>
       <Route path='/createoptions' element={<CreateOptions userPuzzles={userPuzzles} />}/>
       <Route path='/solve' element={<SolvePage />}/>
       <Route path='/myaccount' element={<MyAccount user={user} setUser={setUser} />}/>
-      <Route path="*" element={<Navigate to="/home" />} />
+      {/* <Route path="*" element={<Navigate to="/home" />} /> */}
     </Routes>
     </>
     :

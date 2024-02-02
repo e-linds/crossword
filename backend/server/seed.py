@@ -105,8 +105,8 @@ if __name__ == '__main__':
         
         print("Starting seed...")
         create_fake_users()
-        create_words()
-        create_puzzles()
+        # create_words()
+        # create_puzzles()
         create_upattempts()
         create_guesses()
 

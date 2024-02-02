@@ -81,6 +81,19 @@ def words():
         db.session.commit()
         return new_word.to_dict(), 201
     
+@app.route('/words/<int:id>', methods = ["GET", "PATCH", "DELETE"])
+def word_by_id(id):
+    word = Word.query.filter(Word.id == id).first()
+
+    if request.method == "DELETE":
+        try:
+            db.session.delete(word)
+            db.session.commit()
+            return {}, 204
+        except:
+            return {"error": "unable to delete"}, 400
+
+    
 
 @app.route('/puzzles', methods = ["GET", "POST"])
 def puzzles():
@@ -115,7 +128,13 @@ def puzzle_by_id(id):
         pass
 
     if request.method == "DELETE":
-        pass
+        try:
+            db.session.delete(puzzle)
+            db.session.commit()
+            return {}, 204
+        except:
+            return{"error": "unable to delete"}, 400
+
 
     
 

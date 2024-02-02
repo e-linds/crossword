@@ -64,7 +64,10 @@ function Home({ user, setUser }) {
     return(
         <div id="home-container">
             {user ? 
+            <>
             <h1>Welcome, {user.name}</h1>
+            <h2>Do you really need instructions here? Just look around, you'll figure it out</h2>
+            </>
             :
             <>
             

@@ -1,25 +1,23 @@
 import Grid2 from "./Grid2"
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
-function CreatePage({ user, userPuzzles, setUserPuzzles }) {
+function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
+    const navigate = useNavigate()
     const [wordInput, setWordInput] = useState("")
     const [clueInput, setClueInput] = useState("")
     const [savedWords, setSavedWords] = useState({})
     const [selectedCells, setSelectedCells] = useState([])
+     
 
 
     let { puzzleid } = useParams();
     const thispuzzleid = parseInt(Object.values({ puzzleid }))
 
     useEffect(() => {
-        if ({ puzzleid }) {
-            
+    
             const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
-
-            setSavedWords(thispuzzle.words)
-        
-        }
+            setSavedWords(thispuzzle ? thispuzzle.words : {})
 
     }, [])
 
@@ -48,14 +46,13 @@ console.log(savedWords)
         e.preventDefault()
         
         if (Object.keys(savedWords).length > 0) {
-            console.log("saved words has stuff in it")
-
             addWord()
 
         } else {
-            console.log("saved words is empty")
             addFirstWord()
-        }}
+        }
+    e.target["new-word"].value = ""
+    }
 
 
 
@@ -66,8 +63,8 @@ console.log(savedWords)
             name: wordInput,
             // clue: clueInput,
             direction: getDirection(),
-            row_index: selectedCells[0][2],
-            column_index: selectedCells[0][1],
+            row_index: selectedCells[0][1],
+            column_index: selectedCells[0][2],
             puzzle_id: input
         }
 
@@ -114,11 +111,51 @@ console.log(savedWords)
 
             addWord(data.id)
             setUserPuzzles([...userPuzzles, data])
+            navigate(`/create/${data.id}`)
         })
 
                 }
 
-    // console.log(filledCells)
+    function clearWord() {
+
+        const firstIndex = selectedCells[0]
+        console.log(firstIndex)
+
+        const wordToClear = savedWords.find((each) => {
+            const position = [(each.row_index + each.column_index), each.row_index, each.column_index]
+            if (position.toString() === firstIndex.toString()) {
+                return each
+            }
+
+        })
+        console.log(wordToClear)
+        console.log(wordToClear.name)
+        console.log(wordToClear.id)
+    
+        fetch(`/api/words/${wordToClear.id}`, {
+            method: "DELETE"
+        })
+        .then(r => {})
+        .then(data => {
+            let array = savedWords
+            const index = array.indexOf(wordToClear)
+            array.splice(index, 1)
+            setSavedWords(array)
+        })
+
+        // for (const each in selectedCells) {
+
+        // }
+        // console.log(selectedCells)
+        // setSelectedCells([])
+    }
+
+    console.log(savedWords)
+    
+    function deleteThisPuzzle() {
+        deletePuzzle(thispuzzleid)
+        navigate("/home")
+    }
 
 
     return(
@@ -127,13 +164,15 @@ console.log(savedWords)
             <Grid2 wordInput={wordInput} selectedCells={selectedCells} setSelectedCells={setSelectedCells} savedWords={savedWords}/>
             <div id="create-details">
                     <form id="newword-form" onSubmit={handleSubmit}>
-                        <input placeholder="new word here" onChange={handleTyping}></input>
+                        <input name="new-word" placeholder="new word here" onChange={handleTyping}></input>
                         <button type="submit">Confirm</button>
                     </form>   
+                <button onClick={clearWord}>Clear Word</button>
                 <div>other text about other words</div>
                 <p>suggestion</p>
                 <p>suggestion</p>
                 <p>suggestion</p>
+                <button id="deletepuzzle-button" onClick={deleteThisPuzzle}>{"Delete Puzzle :("}</button>
             </div>
         </main>
     )
