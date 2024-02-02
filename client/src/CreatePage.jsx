@@ -1,12 +1,32 @@
 import Grid2 from "./Grid2"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-function CreatePage({ user }) {
+function CreatePage({ user, userPuzzles, setUserPuzzles }) {
     const [wordInput, setWordInput] = useState("")
     const [clueInput, setClueInput] = useState("")
-    const [filledCells, setFilledCells] = useState([])
+    const [savedWords, setSavedWords] = useState({})
     const [selectedCells, setSelectedCells] = useState([])
- 
+
+
+    let { puzzleid } = useParams();
+
+    useEffect(() => {
+        if ({ puzzleid }) {
+
+            let array = []
+            console.log(userPuzzles)
+            // for (const each in userPuzzles) {
+            //     console.log(userPuzzles[each].words)
+            // }
+
+        }
+
+    }, [])
+
+
+console.log(savedWords)
+console.log()
 
     function getDirection() {
 
@@ -25,29 +45,24 @@ function CreatePage({ user }) {
         const input = e.target.value
         setWordInput(input)
     }
-
-    function handleClick(e) {
+//handle submission of a new word to the board
+    function handleSubmit(e) {
         e.preventDefault()
-
-        // fetch - post to puzzles
-
-        // const new_puzzle = {
-        //     name: "New Puzzle",
-        //     user_id: user.id
-        // }
-
-        // fetch('/api/puzzles', {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application.json"
-        //     },
-        //     body: JSON.stringify(new_puzzle)
-        // })
-        // .then(r => r.json())
-        // .then(data => console.log(data))
         
+        if (Object.keys(savedWords).length > 0) {
+            console.log("saved words has stuff in it")
 
-        //fetch - post to words with puzzle id we just got
+            addWord()
+
+        } else {
+            console.log("saved words is empty")
+            addFirstWord()
+        }}
+
+
+
+//add a word, regardless of whether this is first word or additional - defaults to puzzle id being current id
+    function addWord(input = 999) {
 
         const new_word = {
             name: wordInput,
@@ -55,23 +70,65 @@ function CreatePage({ user }) {
             direction: getDirection(),
             row_index: selectedCells[0][2],
             column_index: selectedCells[0][1],
-            puzzle_id: new_puzzle.id
+            puzzle_id: input
         }
 
-        console.log(new_word)
+        fetch("/api/words", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(new_word)
+        })
+        .then(r => r.json())
+        .then(data => {
 
-        //frontend: remove blue and make letters look more permanent
+            setSelectedCells([])
+            setWordInput("")
 
+            setSavedWords([...savedWords, data])
 
+            //lots more to add here
+
+        })
     }
+
+    //add the first word, which saves the puzzle and saves the word to that new puzzle
+    //ALSO NEED TO FIGURE OUT HOW TO CHANGE URL ONCE PUZLE IS SAVED TO INCLUDE ID ON END
+    function addFirstWord() {
+
+        const new_puzzle = {
+            name: "New Puzzle",
+            user_id: user.id
+        }
+
+        console.log(new_puzzle)
+
+        fetch('/api/puzzles', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(new_puzzle)
+        })
+        .then(r => r.json())
+        .then(data => {
+
+            addWord(data.id)
+            setUserPuzzles([...userPuzzles, data])
+        })
+
+                }
+
+    // console.log(filledCells)
 
 
     return(
         <main id="createpage-container">
             <div>clues</div>
-            <Grid2 wordInput={wordInput} selectedCells={selectedCells} setSelectedCells={setSelectedCells}/>
+            <Grid2 wordInput={wordInput} selectedCells={selectedCells} setSelectedCells={setSelectedCells} savedWords={savedWords}/>
             <div id="create-details">
-                    <form id="newword-form" onSubmit={handleClick}>
+                    <form id="newword-form" onSubmit={handleSubmit}>
                         <input placeholder="new word here" onChange={handleTyping}></input>
                         <button type="submit">Confirm</button>
                     </form>   

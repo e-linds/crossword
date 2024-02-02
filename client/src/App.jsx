@@ -7,9 +7,11 @@ import SolvePage from "./SolvePage"
 import MyAccount from "./MyAccount"
 import Header from "./Header"
 import Home from "./Home"
+import CreateOptions from "./CreateOptions"
 
 function App() {
   const [user, setUser] = useState(null)
+  const [userPuzzles, setUserPuzzles] = useState([])
 
   useEffect(()=>{
     fetch('/api/check_session')
@@ -24,6 +26,24 @@ function App() {
     .then(data => setUser(data))
   },[])
 
+  useEffect(() => {
+
+    if (user) {
+      fetch('/api/puzzles')
+      .then(r => r.json())
+      .then(data => {
+        let array = []
+        for (const each in data) {
+          if (data[each].user_id === user.id) {
+            array.push(data[each])
+          }
+        }
+        console.log(array)
+        setUserPuzzles(array)
+      })
+  }
+  }, [user])
+
 
 
   
@@ -35,7 +55,9 @@ function App() {
     <Header />
     <Routes>
       <Route path='/home' element={<Home user={user} setUser={setUser}/>}/>
-      <Route path='/create' element={<CreatePage user={user}/>}/>
+      <Route path='/create' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles}/>}/>
+      <Route path='/create/:puzzleid' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles}/>}/>
+      <Route path='/createoptions' element={<CreateOptions userPuzzles={userPuzzles} />}/>
       <Route path='/solve' element={<SolvePage />}/>
       <Route path='/myaccount' element={<MyAccount user={user} setUser={setUser} />}/>
       <Route path="*" element={<Navigate to="/home" />} />

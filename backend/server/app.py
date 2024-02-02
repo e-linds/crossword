@@ -102,6 +102,20 @@ def puzzles():
         db.session.add(new_puzzle)
         db.session.commit()
         return new_puzzle.to_dict(), 201
+    
+
+@app.route('/puzzles/<int:id>', methods = ["GET", "PATCH", "DELETE"])
+def puzzle_by_id(id):
+    puzzle = Puzzle.query.filter(Puzzle.id == id).first()
+
+    if request.method == "GET":
+        return puzzle.to_dict(), 200
+    
+    if request.method == "PATCH":
+        pass
+
+    if request.method == "DELETE":
+        pass
 
     
 

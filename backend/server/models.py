@@ -17,6 +17,8 @@ class User(db.Model, SerializerMixin):
 
     puzzles = relationship("Puzzle", back_populates="user")
     upattempts = relationship("UPAttempt", back_populates="user")
+
+    serialize_rules = ('-upattempts.user', '-puzzles.user',)
   
 
     def __repr__(self):
@@ -55,6 +57,8 @@ class Puzzle(db.Model, SerializerMixin):
 
     words = relationship("Word", back_populates = "puzzle")
     user = relationship("User", back_populates = "puzzles")
+
+    serialize_rules = ('-words.puzzle', '-user.puzzles',)
    
 
 class Word(db.Model, SerializerMixin):
@@ -70,6 +74,8 @@ class Word(db.Model, SerializerMixin):
 
     puzzle = relationship("Puzzle", back_populates="words")
 
+    serialize_rules = ('-puzzle.words',)
+
 
 class UPAttempt(db.Model, SerializerMixin):
     __tablename__ = "upattempts"
@@ -80,6 +86,8 @@ class UPAttempt(db.Model, SerializerMixin):
 
     guesses = relationship("Guess", back_populates="upattempt")
     user = relationship("User", back_populates="upattempts")
+
+    serialize_rules = ('-guesses.upattempt', '-user.upattempts',)
 
 
 class Guess(db.Model, SerializerMixin):
@@ -93,6 +101,8 @@ class Guess(db.Model, SerializerMixin):
     upattempt_id = Column(Integer, ForeignKey("upattempts.id"))
 
     upattempt = relationship("UPAttempt", back_populates="guesses")
+
+    serialize_rules = ('-upattempt.guesses',)
 
 
 

@@ -46,7 +46,8 @@ def create_words():
 def create_puzzles():
     for each in range(5):
         new_puzz = Puzzle(
-            name = f"{fake.word()} {fake.word()}"
+            name = f"{fake.word()} {fake.word()}",
+            user_id = fake.random_int(min=1, max=3)
         )
         db.session.add(new_puzz)
         db.session.commit()

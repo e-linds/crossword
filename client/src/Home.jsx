@@ -62,30 +62,35 @@ function Home({ user, setUser }) {
 
 
     return(
-        <div>
+        <div id="home-container">
             {user ? 
             <h1>Welcome, {user.name}</h1>
             :
             <>
-            <form onSubmit={handleLoginSubmit}>
-                <input name="email" placeholder="Email"></input>
-                <br></br>
-                <input name="password" placeholder="Password"></input>
-                <br></br>
-                <button type="submit">Login</button>
-            </form>
-            <form onSubmit={handleSignupSubmit}>
-                <input name="name" placeholder="Name"></input>
-                <br></br>
-                <input name="email" placeholder="Email"></input>
-                <br></br>
-                <input name="password" placeholder="Password"></input>
-                <br></br>
-                <button type="submit">Signup</button>
-            </form>
+            
+            <div id="homeforms-container">
+                <h1>Crossword</h1>
+                <form onSubmit={handleLoginSubmit} className="home-form">
+                    <input name="email" placeholder="Email"></input>
+                    <br></br>
+                    <input name="password" placeholder="Password"></input>
+                    <br></br>
+                    <button type="submit">Login</button>
+                </form>
+                <form onSubmit={handleSignupSubmit} className="home-form">
+                    <input name="name" placeholder="Name"></input>
+                    <br></br>
+                    <input name="email" placeholder="Email"></input>
+                    <br></br>
+                    <input name="password" placeholder="Password"></input>
+                    <br></br>
+                    <button type="submit">Signup</button>
+                </form>
+            </div>
             </>
         }
         </div>
+        
     )
 }
 
