@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wordInput }) {
+function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wordInput, savedWords }) {
     const [selected, setSelected] = useState(false)
     const [letter, setLetter] = useState("")
     // const { DragSelection } = useSelectionContainer()
@@ -59,6 +59,7 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
         }}
     }
 
+    //this displays letters as they are typed into the word input field
     function addLetters() {
 
         if (selectedCells) {
@@ -83,7 +84,22 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
 
     }
 
-    // console.log(selectedCells)
+    // function displaySavedWords() {
+
+    //     for (const each in savedWords) {
+    //         if (savedWords[each].row_index === row_index && savedWords[each].column_index === column_index) {
+
+    //             console.log(`${savedWords[each].row_index} ${savedWords[each].column_index}`)
+
+    //         }
+            
+    //     }
+
+
+    // }
+
+    // displaySavedWords()
+
 
  
     return(

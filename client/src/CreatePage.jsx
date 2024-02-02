@@ -10,23 +10,21 @@ function CreatePage({ user, userPuzzles, setUserPuzzles }) {
 
 
     let { puzzleid } = useParams();
+    const thispuzzleid = parseInt(Object.values({ puzzleid }))
 
     useEffect(() => {
         if ({ puzzleid }) {
+            
+            const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
 
-            let array = []
-            console.log(userPuzzles)
-            // for (const each in userPuzzles) {
-            //     console.log(userPuzzles[each].words)
-            // }
-
+            setSavedWords(thispuzzle.words)
+        
         }
 
     }, [])
 
 
 console.log(savedWords)
-console.log()
 
     function getDirection() {
 
@@ -62,7 +60,7 @@ console.log()
 
 
 //add a word, regardless of whether this is first word or additional - defaults to puzzle id being current id
-    function addWord(input = 999) {
+    function addWord(input = thispuzzleid) {
 
         const new_word = {
             name: wordInput,
