@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react'
-import GridCell from "./GridCell"
+import GridCellCreate from "./GridCellCreate"
 
-function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions }) {
+function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions }) {
+
+    // useEffect(() => {
+    //     if (savedWords) {
+    //     displaySavedWords()
+    //     }
+    // }, [savedWords])
     
 
     const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", 'j', 'k', "l", "m", "n", "o", "p", "q", "r", "s"]
     let row_index
     let column_index
     let letterPositions = {}
+
+    
 
 
 
@@ -42,7 +50,6 @@ function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords, ordere
 
                 }
 
-            // console.log(letterPositions)
 
             
         }
@@ -52,7 +59,6 @@ function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords, ordere
 
     displaySavedWords()
 
-
     return(
         <div id="grid2">
             {array.map((each) => {
@@ -60,7 +66,7 @@ function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords, ordere
                 return <div id="gridrows">
                     {array.map((item) => {
                         column_index = array.indexOf(item)
-                        return <GridCell 
+                        return <GridCellCreate 
                         row_index={row_index} 
                         column_index={column_index} 
                         selectedCells={selectedCells} 
@@ -78,4 +84,4 @@ function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords, ordere
     )
 }
 
-export default Grid2
+export default GridCreate

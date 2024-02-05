@@ -1,4 +1,4 @@
-import Grid2 from "./Grid2"
+import GridCreate from "./GridCreate"
 import { useEffect, useInsertionEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -222,7 +222,6 @@ function createDisplayClues() {
         array.push(finishedClue)  
     }
     setDisplayClues(array)
-    // console.log(array)
 }
     
     function deleteThisPuzzle() {
@@ -246,7 +245,7 @@ function createDisplayClues() {
             <h3>Clues will display here</h3>
             }
             </div>
-            <Grid2 
+            <GridCreate 
             wordInput={wordInput} 
             selectedCells={selectedCells} 
             setSelectedCells={setSelectedCells} 

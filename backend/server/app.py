@@ -134,7 +134,80 @@ def puzzle_by_id(id):
             return {}, 204
         except:
             return{"error": "unable to delete"}, 400
+        
 
+
+@app.route('/guesses', methods = ["GET", "POST"])
+def guesses():
+    guesses = Guess.query.all()
+
+    if request.method == "GET":
+        all_guesses = []
+        for each in guesses:
+            all_guesses.append(each.to_dict())
+        return all_guesses, 200
+    
+    if request.method == "POST":
+        data = request.get_json()
+        new_guess = Guess(
+            name = data.get("name"),
+            direction = data.get("direction"),
+            row_index = data.get("row_index"),
+            column_index = data.get("column_index"),
+            upattempt_id = data.get("upattempt_id")
+        )
+        db.session.add(new_guess)
+        db.session.commit()
+        return new_guess.to_dict(), 201
+    
+@app.route('/guesses/<int:id>', methods = ["GET", "PATCH", "DELETE"])
+def guess_by_id(id):
+    guess = Guess.query.filter(Guess.id == id).first()
+
+    if request.method == "DELETE":
+        try: 
+            db.session.delete(guess)
+            db.session.commit()
+            return {}, 204
+        except: 
+            {"error": "unable to delete"}
+
+    
+@app.route('/upattempts', methods = ["GET", "POST"]) 
+def upattempts():
+    upattempts = UPAttempt.query.all()
+
+    if request.method == "GET":
+            all_upattempts = []
+            for each in upattempts:
+                all_upattempts.append(each.to_dict())
+            return all_upattempts, 200
+        
+    if request.method == "POST":
+        data = request.get_json()
+        new_upattempt = UPAttempt(
+            puzzle_id = data.get("puzzle_id"),
+            user_id = data.get("user_id")
+                
+        )
+        db.session.add(new_upattempt)
+        db.session.commit()
+        return new_upattempt.to_dict(), 201   
+    
+@app.route('/upattempt/<int:id>', methods = ["GET", "PATCH", "DELETE"])
+def upattempt_by_id(id):
+    upattempt = UPAttempt.query.filter(UPAttempt.id == id).first()
+
+    if request.method == "GET":
+        return upattempt.to_dict()
+    
+    if request.method == "DELETE":
+        try:
+            db.session.delete(upattempt)
+            db.session.commit()
+            return {}, 204
+        except:
+            {"error": "unable to delete"}
 
     
 

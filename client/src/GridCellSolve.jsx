@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wordInput, letterPositions, orderedPositions }) {
+function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCells, guessInput, letterPositions, orderedPositions, guessPositions }) {
     const [selected, setSelected] = useState(false)
-    const [letter, setLetter] = useState("")
+    const [letterExists, setLetterExists] = useState(false)
+    const [guessLetter, setGuessLetter] = useState("")
     const [cellNumber, setCellNumber] = useState("")
     // const { DragSelection } = useSelectionContainer()
 
@@ -14,17 +15,24 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
 
     useEffect(() => {
         displaySavedWords()
-    }, [letterPositions, letter])
+    }, [letterPositions])
 
     useEffect(() => {
         addLetters()
-    }, [wordInput])
+    }, [guessInput])
+
+    // console.log(letterPositions)
 
     
 
     let cellStyle
 
-    if (selected === false || selectedCells.length === 0) {
+    if (letterExists === false) {
+        cellStyle = {
+            backgroundColor: "#222222"
+        }
+
+    } else if (selected === false || selectedCells.length === 0) {
         cellStyle = {
             backgroundColor: "white"
         }
@@ -80,24 +88,28 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
             }
             const index = array.indexOf(position.toString())
 
-            if (wordInput) {
-                setLetter(wordInput[index])
-            } else if (wordInput === "") {
-                setLetter("")
-            }
+            // if (guessInput) {
+            //     setLetterExists(true)
+            // } else if (guessInput === "") {
+            //     setLetterExists(false)
+            // }
 
         }}
 
     }
 
+    // this function displays words which are saved to the guesses array
    function displaySavedWords() {
 
-
-    //display words
     const positionToMatch = position.slice(1).toString().replaceAll(",", " ")
-    const letterToDisplay = letterPositions[`${positionToMatch}`]
-  
-    setLetter(letterToDisplay ? letterToDisplay : "")
+
+    //display white space for the words which are saved in the puzzle
+    const checkMatch = letterPositions[`${positionToMatch}`]
+    setLetterExists(checkMatch ? true : false)
+
+    // /display actual letters from the guesses array
+    const letterToDisplay = guessPositions[`${positionToMatch}`]
+    setGuessLetter(letterToDisplay)
 
 
     //display numbers (1 across, etc)
@@ -107,12 +119,11 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
             if ((orderedPositions[each][0]).toString() === position.toString()) {
                 const numberToDisplay = orderedPositions[each][3]
                 setCellNumber(numberToDisplay)
-                // console.log(`${numberToDisplay} ${orderedPositions[each][1]}`)
             }
         }
     }
 
-   }
+      }
 
  
     return(
@@ -120,13 +131,13 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
         {/* <DragSelection /> */}
         <div id="gridcell" onClick={handleCellClick} style={cellStyle}>
             <div id="cell-number">{cellNumber}</div>
-            <div id="cell-letter">{letter}</div>
+            <div id="cell-letter">{guessLetter}</div>
         </div>
         </>
     )
 }
 
-export default GridCell
+export default GridCellSolve
 
 
 
