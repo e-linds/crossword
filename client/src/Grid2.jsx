@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import GridCell from "./GridCell"
 
-function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords }) {
+function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions }) {
     
 
     const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", 'j', 'k', "l", "m", "n", "o", "p", "q", "r", "s"]
@@ -68,6 +68,7 @@ function Grid2 ({ wordInput, selectedCells, setSelectedCells, savedWords }) {
                         wordInput={wordInput}
                         savedWords={savedWords}
                         letterPositions={letterPositions}
+                        orderedPositions={orderedPositions}
                         />
                     })}
                     

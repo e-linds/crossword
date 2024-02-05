@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wordInput, savedWords, letterPositions }) {
+function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wordInput, letterPositions, orderedPositions }) {
     const [selected, setSelected] = useState(false)
     const [letter, setLetter] = useState("")
+    const [cellNumber, setCellNumber] = useState("")
     // const { DragSelection } = useSelectionContainer()
 
-    const position = [(row_index + column_index), row_index, column_index]
-    
+    const position = [(row_index + column_index), row_index, column_index]    
 
     useEffect(() => {
         displaySavedWords()
@@ -19,6 +19,8 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
     useEffect(() => {
         addLetters()
     }, [wordInput])
+
+    
 
     let cellStyle
 
@@ -45,7 +47,6 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
     function handleCellClick() {
         setSelected(!selected)
         //sum of row index plus column index is [0] in position for easier sorting later
-        console.log(position)
         if (selectedCells) {
 
         const exists = selectedCells.find(each => each[1] === position[1] && each[2] === position[2])
@@ -91,14 +92,25 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
 
    function displaySavedWords() {
 
-    // console.log(letterPositions)
 
+    //display words
     const positionToMatch = position.slice(1).toString().replaceAll(",", " ")
     const letterToDisplay = letterPositions[`${positionToMatch}`]
-    // console.log(positionToMatch)
-    // console.log(letterToDisplay)
-
+  
     setLetter(letterToDisplay ? letterToDisplay : "")
+
+
+    //display numbers (1 across, etc)
+    if (orderedPositions) {
+        for (const each in orderedPositions) {
+           
+            if ((orderedPositions[each][0]).toString() === position.toString()) {
+                const numberToDisplay = orderedPositions[each][3]
+                setCellNumber(numberToDisplay)
+                // console.log(`${numberToDisplay} ${orderedPositions[each][1]}`)
+            }
+        }
+    }
 
    }
 
@@ -106,7 +118,10 @@ function GridCell({ row_index, column_index, selectedCells, setSelectedCells, wo
     return(
         <>
         {/* <DragSelection /> */}
-        <div id="gridcell" onClick={handleCellClick} style={cellStyle}>{letter}</div>
+        <div id="gridcell" onClick={handleCellClick} style={cellStyle}>
+            <div id="cell-number">{cellNumber}</div>
+            <div id="cell-letter">{letter}</div>
+        </div>
         </>
     )
 }

@@ -223,7 +223,7 @@ button:focus-visible {
 
 #createpage-container {
   display: grid;
-  grid-template-columns: .75fr 2fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   column-gap: 20px;
   /* justify-items: center */
   
@@ -275,7 +275,23 @@ button:focus-visible {
   border: solid;
   border-width: 1px;
   border-top: none;
-  border-bottom: none
+  border-bottom: none;
+  display:grid;
+  width: 100%;
+}
+
+#cell-number {
+  font-size: 12px;
+  display: grid;
+  justify-content: left
+}
+
+#cell-letter {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px
+  /* font-weight: 600 */
 }
 
 #deletepuzzle-button:hover {
