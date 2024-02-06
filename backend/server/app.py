@@ -85,6 +85,18 @@ def words():
 def word_by_id(id):
     word = Word.query.filter(Word.id == id).first()
 
+    if request.method == "PATCH":
+        try:
+            data = request.get_json()
+            for attr in data:  
+                setattr(word, attr, data.get(attr))
+            db.session.add(word)
+            db.session.commit()
+            return word.to_dict(), 200
+        except:
+            return {"error": "unable to edit"}, 304
+
+
     if request.method == "DELETE":
         try:
             db.session.delete(word)

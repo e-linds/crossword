@@ -79,7 +79,7 @@ function Home({ user, setUser }) {
             {user ? 
             <>
             <h1>Welcome, {user.name}</h1>
-            <h2>Do you really need instructions here? Just look around, you'll figure it out</h2>
+            <h2>Hmm, I wonder what those buttons up there do</h2>
             </>
             :
             <>

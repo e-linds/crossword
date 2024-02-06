@@ -353,7 +353,7 @@ function clearPuzzleandExit() {
                         <DialogContent>
                             <DialogContentText>Something in the puzzle isn't quite right.</DialogContentText>
                             <DialogContentText>{"(Or, it's not finished! Why are you checking the answers already?!)"}</DialogContentText>
-                            <DialogContentText>Keep trying.</DialogContentText>
+                            <DialogContentText>Keep trying!</DialogContentText>
                         </DialogContent>
                 }
                 </Dialog>

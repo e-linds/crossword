@@ -1,62 +1,59 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function CreatedClue({ text, savedClues, savedWords }) {
     const [clueEditMode, setClueEditMode] = useState(false)
+    const [wordId, setWordId] = useState("")
+    const [newClue, setNewClue] = useState("")
+
+    const index = text.indexOf(":")
+    const justClue = text.slice(index + 2)
+    const justNumDirection = text.slice(0, index + 2)
+
+    console.log(justClue)
+    console.log(justNumDirection)
+
+    useEffect(() => {
+        getWordId()
+        setNewClue(justClue)
+    },[])
+
 
     function getWordId() {
 
-        // console.log(Object.keys(savedClues))
-
-        // let count = -1
-        // for (const each of Object.keys(savedClues)) {
-        //     count = count + 1
-        //     const id = Object.keys(savedClues)[count]
-        //     console.log(savedClues[id].toString())
-        //     console.log(text.toString())
-
-            
-        
-
-            // if (savedClues[id].toString() === text.toString()) {
-            //     console.log(text)
-            // }
-            // if (savedClues[Object.keys(savedClues)[each]] === text) {
-            //     console.log("hello")
-            // }
-        // }
-        
-
-        // const 
-
-        // const word = savedWords.find(each => each["id"] === 1)
-        // console.log(word)
-
-        //WORKING ON GETTING THE WORD ID ASSOCIATED WITH THE CLUE TO THEN PATCH IT
-
         let swappedDict = {}
 
-        function swap(dict){
-            for(const key in dict){
-              swappedDict[dict[key]] = key;
-            }
-          }
+        for(const key in savedClues){
+            swappedDict[savedClues[key]] = key;
+        }
+        
+        const wordid = swappedDict[justClue.toString()]
 
-          
-
-        const index = text.indexOf(":")
-        const justText = text.slice(index + 2)
-        // console.log(justText)
-
-        // console.log(swappedDict[justText.toString()])
+        setWordId(wordid)        
     }
 
-    getWordId()
+    function handleTyping(e) {
+        e.preventDefault()
 
+        const input = e.target.value
+
+        setNewClue(input)
+
+    }
+
+    
     function handleSubmit(e) {
         e.preventDefault()
         setClueEditMode(false)
-        const input = e.target.clue.value
-        console.log(input)
+
+        fetch(`/api/words/${wordId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                clue: newClue
+            })
+        })
   
     }
 
@@ -64,13 +61,19 @@ function CreatedClue({ text, savedClues, savedWords }) {
     return(
         <>
         {clueEditMode ? 
-        <form onSubmit={handleSubmit}>
-            <input placeholder={text} name="clue"></input>
+        <div>
+            <p>{justNumDirection}</p>
+            <form onSubmit={handleSubmit}>
+            <textarea value={newClue} name="clue" onChange={handleTyping}></textarea>
             <button type="submit">ok</button>
             <button type="button" onClick={() => setClueEditMode(false)}>X</button>
         </form>
+        </div> 
+        
         :
-        <p onDoubleClick={() => setClueEditMode(true)}>{text}</p>
+        <div onDoubleClick={() => setClueEditMode(true)}>
+            <p>{justNumDirection}{newClue ? newClue : justClue}</p>
+        </div> 
         }
         </>
         

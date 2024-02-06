@@ -241,7 +241,10 @@ function createDisplayClues() {
 }
     
     function deleteThisPuzzle() {
-        deletePuzzle(thispuzzleid)
+        if (thispuzzleid) {
+            deletePuzzle(thispuzzleid)
+        }
+
         navigate("/home")
     }
 
@@ -294,11 +297,11 @@ console.log(userPuzzles)
             <div id="createpuzzletitle">
             {puzzleNameEditMode ?
             <form id="puzzlenameeditmode" onSubmit={handlePuzzleNameSubmit}>
-                <input name="puzzlename" placeholder={puzzleName ? puzzleName : `New Puzzle No. ${thispuzzleid}`}></input>
+                <input name="puzzlename" placeholder={puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}></input>
                 <button>✅</button>
             </form>
             :
-            <h1 onDoubleClick={handlePuzzleEdit}>{puzzleName ? puzzleName : `New Puzzle No. ${thispuzzleid}`}</h1>
+            <h1 onDoubleClick={handlePuzzleEdit}>{puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}</h1>
             }
             </div>
             <div>
@@ -323,7 +326,7 @@ console.log(userPuzzles)
                 />
             </div>
             <div id="create-details">
-                <h2>Add New</h2>
+                <h2>Add to Puzzle</h2>
                     <form id="newword-form" onSubmit={handleSubmit}>
                         <input name="new-word" placeholder="new word here" onChange={handleWordTyping} value={wordInput ? wordInput : ""}></input>
                         <div>other text about other words</div>
