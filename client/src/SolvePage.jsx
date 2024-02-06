@@ -10,8 +10,7 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
     const [displayClues, setDisplayClues] = useState([])
     const [selectedCells, setSelectedCells] = useState([])
     const [orderedPositions, setOrderedPositions] = useState([])
-    const [currentGuesses, setCurrentGuesses] = useState([])
-     
+    const [currentGuesses, setCurrentGuesses] = useState([])   
 
 
     let { puzzleid } = useParams();
@@ -99,6 +98,7 @@ function addGuess() {
     let attemptid
     if (existingAttempt) {
         attemptid = existingAttempt.id
+        console.log(attemptid)
 
     } else {
 
@@ -106,6 +106,8 @@ function addGuess() {
             user_id: user.id,
             puzzle_id: thispuzzleid
         }
+
+        console.log(new_upattempt)
 
         fetch('/api/upattempts', {
             method: "POST",
@@ -116,12 +118,16 @@ function addGuess() {
         })
         .then(r => r.json())
         .then(data => {
-
+            console.log(data)
             attemptid = data.id
+            console.log(attemptid)
+
             navigate(`/solve/${thispuzzleid}`)
         })
 
         }
+
+        if (attemptid) {
 
         const new_guess = {
             name: guessInput,
@@ -146,13 +152,11 @@ function addGuess() {
 
             setCurrentGuesses([...currentGuesses, data])
 
-        })}}
+        })}}}
 
-
-console.log(currentGuesses)
 
     
-    function clearWord() {
+    function clearGuess() {
 
         const firstIndex = selectedCells[0]
 
@@ -170,13 +174,21 @@ console.log(currentGuesses)
         .then(r => {})
         .then(data => {
             let array = currentGuesses
-            const index = array.indexOf(wordToClear)
+            const index = array.indexOf(guessToClear)
             array.splice(index, 1)
             console.log(array)
             setCurrentGuesses(array)
-        })
+        })    
+    }
 
-    
+    function clearAllGuesses() {
+
+        fetch(`/api/upattempt/${existingAttempt.id}/guesses`, {
+            method: "DELETE"
+        })
+        .then(r => console.log(r))
+        .then(data => setCurrentGuesses([]))
+        
     }
 
     function assignNumberedCells() {
@@ -250,11 +262,10 @@ function createDisplayClues() {
             <div id="create-details">
                     <form id="newword-form" onSubmit={handleSubmit}>
                         <input name="new-guess" placeholder="Enter Guess Here" onChange={handleGuessTyping}></input>
-                        
-                        
                         <button type="submit">Confirm Guess</button>
                     </form>  
-                <button onClick={clearWord}>To clear a word from the board, select all its cells, then click this button</button>
+                <button onClick={clearGuess}>To clear a word from the board, select all its cells, then click this button</button>
+                <button onClick={clearAllGuesses}>To clear the whole board, click here</button>
             </div>
         </main>
     )

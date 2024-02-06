@@ -21,6 +21,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     
             const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
             setSavedWords(thispuzzle ? thispuzzle.words : {})
+            setSelectedCells([])
 
         if (thispuzzle) {
             let dict = {}
@@ -47,10 +48,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
 
             createDisplayClues()
 
-    }
-
-
-    }, [orderedPositions])
+    }}, [orderedPositions, savedWords])
 
 
     function getDirection() {
@@ -114,16 +112,28 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
         .then(r => r.json())
         .then(data => {
 
-            setSelectedCells([])
-            setWordInput("")
+            let array = []
 
-            setSavedWords([...savedWords, data])
+            setSelectedCells(array)
+            setWordInput("")
+            setClueInput("")
+
+            const array2 = savedWords
+            array2.push(data)
+
+            setSavedWords(array2)
+
+            let dict = savedClues
+            dict[data.id] = data.clue
+            setSavedClues(dict)
 
             //lots more to add here
             
 
         })}
     }
+
+    console.log(selectedCells)
 
     //add the first word, which saves the puzzle and saves the word to that new puzzle
     function addFirstWord() {

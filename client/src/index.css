@@ -265,10 +265,10 @@ button:focus-visible {
   border: solid;
   border-width: 1px;
   width: 700px;
-  height: 35px;
+  height: 40px;
   border-bottom: none;
   display: grid;
-  grid-template-columns: repeat(20, 1fr)
+  grid-template-columns: repeat(18, 1fr)
 }
 
 #gridcell {
@@ -281,7 +281,7 @@ button:focus-visible {
 }
 
 #cell-number {
-  font-size: 12px;
+  font-size: 14px;
   display: grid;
   justify-content: left
 }

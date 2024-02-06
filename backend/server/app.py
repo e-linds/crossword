@@ -209,6 +209,19 @@ def upattempt_by_id(id):
         except:
             {"error": "unable to delete"}
 
+@app.route('/upattempt/<int:id>/guesses', methods = ["DELETE"])
+def upattempt_guesses(id):
+    guesses = Guess.query.filter(Guess.upattempt_id == id).all()
+
+    if request.method == "DELETE":
+        try:
+            for each in guesses:
+                db.session.delete(each)
+                db.session.commit()
+            return {}, 204
+        except:
+            return {"error": "unable to delete"}
+
     
 
 if __name__ == '__main__':

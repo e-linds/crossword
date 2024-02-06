@@ -96,7 +96,7 @@ console.log(userPuzzles)
       <Route path='/createoptions' element={<CreateOptions userPuzzles={userPuzzles} />}/>
       <Route path='/solveoptions' element={<SolveOptions userPuzzles={userPuzzles} UPAttempts={UPAttempts}/>}/>
       <Route path='/solve/:puzzleid' element={<SolvePage user={user} userPuzzles={userPuzzles} UPAttempts={UPAttempts}/>}/>
-      <Route path='/myaccount' element={<MyAccount user={user} setUser={setUser} />}/>
+      <Route path='/myaccount' element={<MyAccount user={user} setUser={setUser} userPuzzles={userPuzzles} />}/>
       {/* <Route path="*" element={<Navigate to="/home" />} /> */}
     </Routes>
     </>

@@ -10,14 +10,14 @@ function GridSolve ({ guessInput, selectedCells, setSelectedCells, puzzleWords, 
     // }, [savedWords])
     
 
-    const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", 'j', 'k', "l", "m", "n", "o", "p", "q", "r", "s"]
+    const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", 'j', 'k', "l", "m", "n", "o", "p", "q", "r"]
     let row_index
     let column_index
     let letterPositions = {}
     let guessPositions = {}
 
 
-    console.log(currentGuesses)
+    // console.log(currentGuesses)
 
 
     //this function takes an array of word objects and arranges them in an object with [row_index column_index]: letter
@@ -59,7 +59,7 @@ function GridSolve ({ guessInput, selectedCells, setSelectedCells, puzzleWords, 
 
     createPositionsDict(currentGuesses, guessPositions)
 
-    console.log(guessPositions)
+    // console.log(guessPositions)
 
     return(
         <div id="grid2">

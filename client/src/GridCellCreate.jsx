@@ -11,9 +11,13 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
     // const { DragSelection } = useSelectionContainer()
 
     const position = [(row_index + column_index), row_index, column_index]    
+    // console.log(`${position} ${selected}`)
+    
 
     useEffect(() => {
         displaySavedWords()
+        // setSelected(false)
+        // setSelectedCells([])
     }, [letterPositions, letter])
 
     useEffect(() => {
