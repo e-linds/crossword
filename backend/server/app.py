@@ -125,7 +125,15 @@ def puzzle_by_id(id):
         return puzzle.to_dict(), 200
     
     if request.method == "PATCH":
-        pass
+        try:
+            data = request.get_json()
+            for attr in data:  
+                setattr(puzzle, attr, data.get(attr))
+            db.session.add(puzzle)
+            db.session.commit()
+            return puzzle.to_dict(), 200
+        except:
+            return {"error": "unable to edit"}, 304
 
     if request.method == "DELETE":
         try:

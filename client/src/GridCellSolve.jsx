@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCells, guessInput, letterPositions, orderedPositions, guessPositions }) {
+function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCells, guessInput, letterPositions, orderedPositions, guessPositions}) {
     const [selected, setSelected] = useState(false)
     const [letterExists, setLetterExists] = useState(false)
     const [guessLetter, setGuessLetter] = useState("")
@@ -122,10 +122,8 @@ function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCell
             }
         }
     }
-
       }
 
- 
     return(
         <>
         {/* <DragSelection /> */}

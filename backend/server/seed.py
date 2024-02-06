@@ -29,16 +29,10 @@ def create_words():
             clue = fake.sentence(),
             direction = direction_opts[random_num],
             puzzle_id = fake.random_int(min=1, max=5),
-            row_index = None,
-            column_index = None
+            row_index = fake.random_int(min=0, max=19),
+            column_index = fake.random_int(min=0, max=19)
 
         )
-        db.session.add(new_word)
-        db.session.commit()
-        if random_num == 0:
-            new_word.row_index = fake.random_int(min=0, max=19)
-        elif random_num == 1:
-            new_word.column_index = fake.random_int(min=0, max=19)
         db.session.add(new_word)
         db.session.commit()
 
@@ -70,22 +64,12 @@ def create_guesses():
             name = fake.word(),
             direction = direction_opts[random_num],
             upattempt_id = fake.random_int(min=1, max=5),
-            row_index = None, 
-            column_index = None
+            row_index = fake.random_int(min=0, max=19), 
+            column_index = fake.random_int(min=0, max=19)
         )
-        # if random_num == 0:
-        #     new_guess.row_index = fake.random_int(min=0, max=19)
-        # elif random_num == 1:
-        #     new_guess.column_index = fake.random_int(min=0, max=19)
         db.session.add(new_guess)
         db.session.commit()
-        if random_num == 0:
-            new_guess.row_index = fake.random_int(min=0, max=19)
-        elif random_num == 1:
-            new_guess.column_index = fake.random_int(min=0, max=19)
-        db.session.add(new_guess)
-        db.session.commit()
-        # print(new_guess.row_index)
+        
 
 
      

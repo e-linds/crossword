@@ -11,6 +11,11 @@
   },
   "dependencies": {
     "@air/react-drag-to-select": "^5.0.8",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@floating-ui/react": "^0.26.9",
+    "@mui/base": "^5.0.0-beta.34",
+    "@mui/material": "^5.15.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3"

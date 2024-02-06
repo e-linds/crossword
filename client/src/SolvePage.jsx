@@ -1,6 +1,11 @@
 import GridSolve from "./GridSolve"
 import { useEffect, useInsertionEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+
 
 function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
     const navigate = useNavigate()
@@ -11,17 +16,26 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
     const [selectedCells, setSelectedCells] = useState([])
     const [orderedPositions, setOrderedPositions] = useState([])
     const [currentGuesses, setCurrentGuesses] = useState([])   
+    const [showPopup, setShowPopup] = useState(false)
+    const [accuracy, setAccuracy] = useState(false)
+
+
+    let letterPositions = {}
+    let guessPositions = {}
 
 
     let { puzzleid } = useParams();
     const thispuzzleid = parseInt(Object.values({ puzzleid }))
     const existingAttempt = UPAttempts.find((each) => each.puzzle_id === thispuzzleid && each.user_id === user.id)
 
+    createPositionsDict(puzzleWords, letterPositions)
+    createPositionsDict(currentGuesses, guessPositions)
 
     useEffect(() => {
     
             const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
             setPuzzleWords(thispuzzle ? thispuzzle.words : {})
+
 
         if (thispuzzle) {
             let dict = {}
@@ -36,6 +50,7 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
 
     }, [])
 
+    
     useEffect(() => {
 
         assignNumberedCells()
@@ -52,15 +67,11 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
     }, [orderedPositions])
 
     useEffect(() => {
-        console.log(UPAttempts)
-
         if (existingAttempt) {
             setCurrentGuesses(existingAttempt.guesses)
         }
-
         //add guesses associated with this puzzle to the current guesses array
     }, [])
-
 
     function getDirection() {
 
@@ -98,7 +109,6 @@ function addGuess() {
     let attemptid
     if (existingAttempt) {
         attemptid = existingAttempt.id
-        console.log(attemptid)
 
     } else {
 
@@ -106,8 +116,6 @@ function addGuess() {
             user_id: user.id,
             puzzle_id: thispuzzleid
         }
-
-        console.log(new_upattempt)
 
         fetch('/api/upattempts', {
             method: "POST",
@@ -218,6 +226,44 @@ function addGuess() {
 
         setOrderedPositions(wordDirectionInfo)
         }}
+    
+    
+        //this function takes an array of word objects and arranges them in an object with [row_index column_index]: letter
+        function createPositionsDict(array, resultObj) {
+    
+        //naive solution - this is not very efficient, can optimize later
+            for (const each in array) {
+                const length = array[each].length
+                
+    
+                let count = -1
+                for (const letter in array[each].name) {
+                    const ind_letter = array[each].name[letter]
+    
+                    //the count variable keeps track of which index of the word we are at
+                    count = count + 1
+                    
+                    let row_result
+                    let column_result
+    
+    
+                    if (array[each].direction === "across") {
+                        row_result = array[each].row_index
+                        column_result = array[each].column_index + (count)
+    
+                    } else if (array[each].direction === "down") {
+                        row_result = array[each].row_index + (count)
+                        column_result = array[each].column_index
+                    }
+    
+                    resultObj[`${row_result} ${column_result}`] = `${ind_letter}`
+    
+                    }
+            }
+    
+        }
+
+
 
 function createDisplayClues() {
 
@@ -232,11 +278,38 @@ function createDisplayClues() {
     }
     setDisplayClues(array)
 }
+
+
+function checkAccuracy() {
+
+    const letterLocations = Object.keys(letterPositions)
+
+    let all_accurate = true
+
+    for (const each in letterLocations) {
+        if (guessPositions[letterLocations[each]] === letterPositions[letterLocations[each]]) {
+        } else {
+            all_accurate = false
+        }}
+
+    if (all_accurate) {
+        setAccuracy(true)
+    }
+    setShowPopup(true)
+}
+
+function handlePopupClose() {
+    setShowPopup(!showPopup)
+
+}
+
+function clearPuzzleandExit() {
+    handlePopupClose()
+    clearAllGuesses()
+    navigate("/home")
+}
+
     
-
-
-
-
     return(
         <main id="createpage-container">
             <div>
@@ -257,7 +330,9 @@ function createDisplayClues() {
             setSelectedCells={setSelectedCells} 
             puzzleWords={puzzleWords}
             orderedPositions={orderedPositions}
+            guessPositions={guessPositions}
             currentGuesses={currentGuesses}
+            letterPositions={letterPositions}
             />
             <div id="create-details">
                     <form id="newword-form" onSubmit={handleSubmit}>
@@ -266,6 +341,23 @@ function createDisplayClues() {
                     </form>  
                 <button onClick={clearGuess}>To clear a word from the board, select all its cells, then click this button</button>
                 <button onClick={clearAllGuesses}>To clear the whole board, click here</button>
+                <button onClick={checkAccuracy}>Check Accuracy</button>
+                <Dialog id="accuracypopup" open={showPopup} onClose={handlePopupClose}>
+                {accuracy ?
+                    <DialogContent >
+                        <DialogContentText>Congrats! All the words are correct!</DialogContentText>
+                        <Button onClick={handlePopupClose}>Save Results</Button>
+                        <Button onClick={clearPuzzleandExit}>Clear and go home</Button>
+                        </DialogContent>
+                        :
+                        <DialogContent>
+                            <DialogContentText>Something in the puzzle isn't quite right.</DialogContentText>
+                            <DialogContentText>{"(Or, it's not finished! Why are you checking the answers already?!)"}</DialogContentText>
+                            <DialogContentText>Keep trying.</DialogContentText>
+                        </DialogContent>
+                }
+                </Dialog>
+                
             </div>
         </main>
     )

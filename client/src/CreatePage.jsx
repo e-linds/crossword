@@ -1,6 +1,11 @@
 import GridCreate from "./GridCreate"
 import { useEffect, useInsertionEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import CreatedClue from "./CreatedClue"
 
 function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     const navigate = useNavigate()
@@ -11,8 +16,11 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     const [displayClues, setDisplayClues] = useState([])
     const [selectedCells, setSelectedCells] = useState([])
     const [orderedPositions, setOrderedPositions] = useState([])
+    const [showDeletePopup, setShowDeletePopup] = useState(false)
+    const [puzzleName, setPuzzleName] = useState("")
+    const [puzzleNameEditMode, setPuzzleNameEditMode] = useState(false)
+    // const [clueEditMode, setClueEditMode] = useState(false)
      
-
 
     let { puzzleid } = useParams();
     const thispuzzleid = parseInt(Object.values({ puzzleid }))
@@ -21,6 +29,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     
             const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
             setSavedWords(thispuzzle ? thispuzzle.words : {})
+            setPuzzleName(thispuzzle ? thispuzzle.name : "")
             setSelectedCells([])
 
         if (thispuzzle) {
@@ -32,6 +41,8 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
 
                 setSavedClues(dict)
             }
+
+
             }
 
     }, [])
@@ -86,8 +97,6 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     e.target["new-word"].value = ""
     }
 
-
-
 //add a word, regardless of whether this is first word or additional - defaults to puzzle id being current id
     function addWord(input = thispuzzleid) {
 
@@ -133,7 +142,6 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
         })}
     }
 
-    console.log(selectedCells)
 
     //add the first word, which saves the puzzle and saves the word to that new puzzle
     function addFirstWord() {
@@ -161,8 +169,6 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
         })
 
                 }
-
-
 
 
     function clearWord() {
@@ -239,44 +245,106 @@ function createDisplayClues() {
         navigate("/home")
     }
 
+    function handleClose() {
+        setShowDeletePopup(false)
+    }
+
+    function handlePuzzleEdit() {
+        setPuzzleNameEditMode(true)
+    }
+
+
+   function handlePuzzleNameSubmit(e) {
+        e.preventDefault()
+        setPuzzleNameEditMode(false)
+
+        const input = e.target.puzzlename.value
+
+        if (input.length > 0) {
+
+        fetch(`/api/puzzles/${thispuzzleid}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: input
+            })
+        })
+        .then(r => r.json())
+        .then(data => setPuzzleName(data.name))
+
+
+
+        console.log(input)
+    }}
+
+    
+console.log(userPuzzles)
+    // console.log(displayClues)
+    // console.log(savedClues)
+    // console.log(orderedPositions)
+    // console.log(savedWords)
+
 
 
     return(
         <main id="createpage-container">
+            <div> </div>
+            <div id="createpuzzletitle">
+            {puzzleNameEditMode ?
+            <form id="puzzlenameeditmode" onSubmit={handlePuzzleNameSubmit}>
+                <input name="puzzlename" placeholder={puzzleName ? puzzleName : `New Puzzle No. ${thispuzzleid}`}></input>
+                <button>✅</button>
+            </form>
+            :
+            <h1 onDoubleClick={handlePuzzleEdit}>{puzzleName ? puzzleName : `New Puzzle No. ${thispuzzleid}`}</h1>
+            }
+            </div>
             <div>
             {displayClues.length > 0 ?
             <>
             <h2>Clues</h2>
             {displayClues.map((each) => {
-                return <p>{each}</p>
+                return <CreatedClue key={each} text={each} savedClues={savedClues} savedWords={savedWords}/>
             })}
             </>
             :
             <h3>Clues will display here</h3>
             }
             </div>
-            <GridCreate 
-            wordInput={wordInput} 
-            selectedCells={selectedCells} 
-            setSelectedCells={setSelectedCells} 
-            savedWords={savedWords}
-            orderedPositions={orderedPositions}
-            />
+            <div >
+                <GridCreate 
+                wordInput={wordInput} 
+                selectedCells={selectedCells} 
+                setSelectedCells={setSelectedCells} 
+                savedWords={savedWords}
+                orderedPositions={orderedPositions}
+                />
+            </div>
             <div id="create-details">
+                <h2>Add New</h2>
                     <form id="newword-form" onSubmit={handleSubmit}>
-                        <input name="new-word" placeholder="new word here" onChange={handleWordTyping}></input>
+                        <input name="new-word" placeholder="new word here" onChange={handleWordTyping} value={wordInput ? wordInput : ""}></input>
                         <div>other text about other words</div>
                         <p>suggestion</p>
                         <p>suggestion</p>
                         <p>suggestion</p>
-                        <textarea name="new-clue" placeholder="clue goes here" onChange={handleClueTyping}></textarea>
+                        <textarea name="new-clue" placeholder="clue goes here" onChange={handleClueTyping} value={clueInput ? clueInput : ""}></textarea>
                         <div>text about suggested clue from AI</div>
                         <p>suggestion</p>
                         <p>suggestion</p>
                         <button type="submit">Confirm Word & Clue</button>
                     </form>  
                 <button onClick={clearWord}>To clear a word from the board, select all its cells, then click this button</button>
-                <button id="deletepuzzle-button" onClick={deleteThisPuzzle}>{"Delete Puzzle :("}</button>
+                <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
+                <Dialog id="deletepopup" open={showDeletePopup} onClose={handleClose}>
+                        <DialogContent >
+                            <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
+                            <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
+                            <Button onClick={handleClose}>Actually, never mind</Button>
+                        </DialogContent>
+                </Dialog>
             </div>
         </main>
     )

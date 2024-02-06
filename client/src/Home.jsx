@@ -1,4 +1,11 @@
+import { useState } from 'react'
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+
 function Home({ user, setUser }) {
+    const [noUser, setNoUser] = useState(null)
 
 
     function handleLoginSubmit(e) {
@@ -26,6 +33,8 @@ function Home({ user, setUser }) {
                 if (r.ok) {
                     return r.json()
                 } else {
+                    setNoUser(true)
+                    console.log("not a user")
                     return null
                 }
             })
@@ -60,6 +69,10 @@ function Home({ user, setUser }) {
 
     }
 
+    function handleClose() {
+        setNoUser(false)
+    }
+
 
     return(
         <div id="home-container">
@@ -79,6 +92,13 @@ function Home({ user, setUser }) {
                     <input name="password" placeholder="Password"></input>
                     <br></br>
                     <button type="submit">Login</button>
+                    <Dialog id="nouserpopup" open={noUser} onClose={handleClose}>
+                        <DialogContent >
+                            <DialogContentText>No user found with these credentials. Please try again.</DialogContentText>
+                            <Button onClick={handleClose}>OK</Button>
+                        </DialogContent>
+                    </Dialog>
+                    
                 </form>
                 <form onSubmit={handleSignupSubmit} className="home-form">
                     <input name="name" placeholder="Name"></input>
