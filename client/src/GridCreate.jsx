@@ -2,18 +2,19 @@ import { useEffect, useState } from 'react'
 import GridCellCreate from "./GridCellCreate"
 
 function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions }) {
+    const [letterPositions, setLetterPositions] = useState({})
 
-    // useEffect(() => {
-    //     if (savedWords) {
-    //     displaySavedWords()
-    //     }
-    // }, [savedWords])
+    useEffect(() => {
+        if (savedWords) {
+        displaySavedWords()
+        }
+    }, [savedWords, wordInput])
     
 
     const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", 'j', 'k', "l", "m", "n", "o", "p", "q", "r"]
     let row_index
     let column_index
-    let letterPositions = {}
+    let letterPositionsProxy = {}
 
 
 
@@ -44,18 +45,17 @@ function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, o
                     column_result = savedWords[each].column_index
                 }
 
-                letterPositions[`${row_result} ${column_result}`] = `${ind_letter}`
+                letterPositionsProxy[`${row_result} ${column_result}`] = `${ind_letter}`
 
                 }
-
-
             
         }
 
+        setLetterPositions(letterPositionsProxy)
 
     }
 
-    displaySavedWords()
+    // console.log(letterPositions)
 
     return(
         <div id="grid2">

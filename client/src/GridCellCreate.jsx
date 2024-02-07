@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCells, wordInput, letterPositions, orderedPositions }) {
+function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCells, wordInput, letterPositions, orderedPositions, savedWords }) {
     const [selected, setSelected] = useState(false)
     const [letter, setLetter] = useState("")
     const [cellNumber, setCellNumber] = useState("")
@@ -15,10 +15,10 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
     
 
     useEffect(() => {
-        displaySavedWords()
+        displayLetters()
         // setSelected(false)
         // setSelectedCells([])
-    }, [letterPositions, letter])
+    }, [letterPositions, letter, savedWords])
 
     useEffect(() => {
         addLetters()
@@ -94,10 +94,9 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
 
     }
 
-   function displaySavedWords() {
+   function displayLetters() {
 
-
-    //display words
+    //display letters
     const positionToMatch = position.slice(1).toString().replaceAll(",", " ")
     const letterToDisplay = letterPositions[`${positionToMatch}`]
   

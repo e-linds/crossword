@@ -219,10 +219,24 @@ function addGuess() {
         wordDirectionInfo.sort((x,y) =>  x[0][0] - y[0][0])
 
         let count = 0
+        let positionsArray = []
+
         for (const each in wordDirectionInfo) {
-            count = count + 1
-            wordDirectionInfo[each].push(count)
-        }
+
+            if (positionsArray.find(item => item.toString() === wordDirectionInfo[each][0].toString())) {
+
+                const originalInstance = wordDirectionInfo.find(ele => ele[0].toString() === wordDirectionInfo[each][0].toString())
+                const originalNumber = originalInstance[3]
+                wordDirectionInfo[each].push(originalNumber)
+
+            } else {
+
+                positionsArray.push(wordDirectionInfo[each][0])
+                count = count + 1
+                wordDirectionInfo[each].push(count)
+
+            }}
+            console.log(wordDirectionInfo)
 
         setOrderedPositions(wordDirectionInfo)
         }}

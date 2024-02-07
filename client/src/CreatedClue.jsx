@@ -9,8 +9,8 @@ function CreatedClue({ text, savedClues, savedWords }) {
     const justClue = text.slice(index + 2)
     const justNumDirection = text.slice(0, index + 2)
 
-    console.log(justClue)
-    console.log(justNumDirection)
+    // console.log(justClue)
+    // console.log(justNumDirection)
 
     useEffect(() => {
         getWordId()

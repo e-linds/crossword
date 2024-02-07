@@ -61,7 +61,7 @@ button:focus-visible {
   border: none
 }
 
-#nouserpopup *, #deletepopup *, #accuracypopup * {
+#nouserpopup *, #deletepopup *, #accuracypopup *, #repeatwordpopup * {
   color: black;
   font-family: 'Inconsolata', monospace;
   text-align: center;
@@ -72,6 +72,10 @@ button:focus-visible {
 #nouserpopup button, #deletepopup button, #accuracypopup button {
   background: var(--primary);
   margin: 5px 10px
+}
+
+#emojitext {
+  font-size: 20px
 }
 
 /* .home-form button:hover {

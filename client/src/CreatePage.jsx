@@ -19,7 +19,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     const [showDeletePopup, setShowDeletePopup] = useState(false)
     const [puzzleName, setPuzzleName] = useState("")
     const [puzzleNameEditMode, setPuzzleNameEditMode] = useState(false)
-    // const [clueEditMode, setClueEditMode] = useState(false)
+    const [repeatWord, setRepeatWord] = useState(false)
      
 
     let { puzzleid } = useParams();
@@ -51,7 +51,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
 
         assignNumberedCells()
 
-    }, [savedWords])
+    }, [savedWords, wordInput])
 
 
     useEffect(() => {
@@ -59,7 +59,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
 
             createDisplayClues()
 
-    }}, [orderedPositions, savedWords])
+    }}, [orderedPositions, savedWords, wordInput])
 
 
     function getDirection() {
@@ -111,6 +111,16 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
             puzzle_id: input
         }
 
+        let alreadyExists = false
+
+        for (const each in savedWords) {
+            if (savedWords[each].name === new_word.name) {
+                alreadyExists = true
+            }
+        }
+
+        if (alreadyExists === false) {
+
         fetch("/api/words", {
             method: "POST",
             headers: {
@@ -127,19 +137,26 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
             setWordInput("")
             setClueInput("")
 
-            const array2 = savedWords
-            array2.push(data)
+            const row = data.row_index
+            const column = data.column_index
+            const clue = data.clue
+            const id = data.id
+            const direction = data.direction
 
-            setSavedWords(array2)
+            savedWords[savedWords.length + 1] = data
 
             let dict = savedClues
-            dict[data.id] = data.clue
+            dict[id] = clue
             setSavedClues(dict)
 
-            //lots more to add here
-            
+            let dict2 = orderedPositions
+            dict2.push([[row + column, row, column], id, direction])
+            setOrderedPositions(dict2)            
 
-        })}
+        })} else {
+
+            setRepeatWord(true)
+        }}
     }
 
 
@@ -166,38 +183,66 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
             addWord(data.id)
             setUserPuzzles([...userPuzzles, data])
             navigate(`/create/${data.id}`)
+
+            fetch(`/api/puzzles/${data.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: `New Puzzle No. ${data.id}`
+                })
+            })
+            .then(r => r.json())
+            .then(data => console.log("name updated"))
+
         })
+
+
+
 
                 }
 
 
     function clearWord() {
+        console.log(savedWords)
 
         const firstIndex = selectedCells[0]
 
-        const wordToClear = savedWords.find((each) => {
-            const position = [(each.row_index + each.column_index), each.row_index, each.column_index]
-            if (position.toString() === firstIndex.toString()) {
-                return each
-            }
+        let wordToClear
+        let keyToClear
 
-        })
+        for (const each in savedWords) {
+            const item = savedWords[each]
+            const position = [(item.row_index + item.column_index), item.row_index, item.column_index]
+            if (position.toString() === firstIndex.toString()) {
+                wordToClear = item
+                keyToClear = each
+                
+            }
+        }
+       
     
         fetch(`/api/words/${wordToClear.id}`, {
             method: "DELETE"
         })
         .then(r => {})
         .then(data => {
-            let array = savedWords
-            const index = array.indexOf(wordToClear)
-            array.splice(index, 1)
-            console.log(array)
-            setSavedWords(array)
+
+            let dict = savedWords
+
+            delete dict[keyToClear]
+
+            setSavedWords(dict)
+
+        
         })
 
     
     }
 
+
+    //this function creates the orderedPositions object
     function assignNumberedCells() {
 
         if (savedWords) {
@@ -206,22 +251,36 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
         let wordDirectionInfo = []
         for (const each in savedWords) {
             if (savedWords[each].name.length > 0) {
-            const direction = savedWords[each].direction
+                const direction = savedWords[each].direction
             if (direction) {
-            const id = savedWords[each].id
-            const row = savedWords[each].row_index
-            const column = savedWords[each].column_index
-            wordDirectionInfo.push([[row + column, row, column], id, direction])
+                const id = savedWords[each].id
+                const row = savedWords[each].row_index
+                const column = savedWords[each].column_index
+                wordDirectionInfo.push([[row + column, row, column], id, direction])
         }}}
 
        //sort by sum, of row + column index, which will place the display letters generally increasing from top left to bottom right 
         wordDirectionInfo.sort((x,y) =>  x[0][0] - y[0][0])
 
         let count = 0
+        let positionsArray = []
+
         for (const each in wordDirectionInfo) {
-            count = count + 1
-            wordDirectionInfo[each].push(count)
-        }
+
+            if (positionsArray.find(item => item.toString() === wordDirectionInfo[each][0].toString())) {
+
+                const originalInstance = wordDirectionInfo.find(ele => ele[0].toString() === wordDirectionInfo[each][0].toString())
+                const originalNumber = originalInstance[3]
+                wordDirectionInfo[each].push(originalNumber)
+
+            } else {
+
+                positionsArray.push(wordDirectionInfo[each][0])
+                count = count + 1
+                wordDirectionInfo[each].push(count)
+
+            }}
+            console.log(wordDirectionInfo)
 
         setOrderedPositions(wordDirectionInfo)
         }}
@@ -248,8 +307,15 @@ function createDisplayClues() {
         navigate("/home")
     }
 
-    function handleClose() {
+    function handleDeleteClose() {
         setShowDeletePopup(false)
+    }
+
+    function handleRepeatWordClose() {
+        setRepeatWord(false)
+        setWordInput("")
+        setClueInput("")
+        setSelectedCells([])
     }
 
     function handlePuzzleEdit() {
@@ -277,13 +343,10 @@ function createDisplayClues() {
         .then(r => r.json())
         .then(data => setPuzzleName(data.name))
 
-
-
-        console.log(input)
     }}
 
     
-console.log(userPuzzles)
+// console.log(userPuzzles)
     // console.log(displayClues)
     // console.log(savedClues)
     // console.log(orderedPositions)
@@ -338,14 +401,20 @@ console.log(userPuzzles)
                         <p>suggestion</p>
                         <p>suggestion</p>
                         <button type="submit">Confirm Word & Clue</button>
+                        <Dialog id="repeatwordpopup" open={repeatWord} onClose={handleRepeatWordClose}>
+                        <DialogContent >
+                            <DialogContentText id="emojitext">🤦🏻‍♀️</DialogContentText>
+                            <DialogContentText>{wordInput.toUpperCase()} is already in the puzzle. Please try another word.</DialogContentText>
+                        </DialogContent>
+                </Dialog>
                     </form>  
                 <button onClick={clearWord}>To clear a word from the board, select all its cells, then click this button</button>
                 <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
-                <Dialog id="deletepopup" open={showDeletePopup} onClose={handleClose}>
+                <Dialog id="deletepopup" open={showDeletePopup} onClose={handleDeleteClose}>
                         <DialogContent >
                             <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
                             <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
-                            <Button onClick={handleClose}>Actually, never mind</Button>
+                            <Button onClick={handleDeleteClose}>Actually, never mind</Button>
                         </DialogContent>
                 </Dialog>
             </div>
