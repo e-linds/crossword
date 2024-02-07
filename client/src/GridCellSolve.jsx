@@ -15,6 +15,7 @@ function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCell
 
     useEffect(() => {
         displaySavedWords()
+
     }, [letterPositions])
 
     useEffect(() => {
@@ -88,11 +89,11 @@ function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCell
             }
             const index = array.indexOf(position.toString())
 
-            // if (guessInput) {
-            //     setLetterExists(true)
-            // } else if (guessInput === "") {
-            //     setLetterExists(false)
-            // }
+            if (guessInput) {
+                setGuessLetter(guessInput[index])
+            } else if (guessInput === "") {
+                setGuessLetter("")
+            }
 
         }}
 

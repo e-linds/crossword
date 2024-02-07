@@ -189,12 +189,11 @@ button:focus-visible {
   color: black
 }
 
-#createpage-container {
+#createpage-container, #solvepage-container {
   display: grid;
   grid-template-rows: 1fr 5fr;
   grid-template-columns: 1fr 2fr 1fr;
   column-gap: 20px;
-  /* justify-items: center */
   
 }
 
@@ -204,6 +203,7 @@ button:focus-visible {
   height: 150px;
 
 }
+
 
 #puzzlenameeditmode input {
   height: 100px;
@@ -227,8 +227,23 @@ button:focus-visible {
   margin: 15px
 }
 
+#solve-details {
+  display: grid;
+  align-items: center
+
+}
+
 #create-details * {
   margin: 10px
+
+}
+
+#solve-details * {
+  margin: 10px 0
+}
+
+#solveclues {
+  margin-left: 10px
 
 }
 

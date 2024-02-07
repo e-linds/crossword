@@ -17,6 +17,7 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
     useEffect(() => {
         displayLetters()
         // setSelected(false)
+        // setSelected(false)
         // setSelectedCells([])
     }, [letterPositions, letter, savedWords])
 
@@ -25,6 +26,7 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
     }, [wordInput])
 
     
+
 
     let cellStyle
 
@@ -88,6 +90,7 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
                 setLetter(wordInput[index])
             } else if (wordInput === "") {
                 setLetter("")
+
             }
 
         }}
@@ -100,7 +103,7 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
     const positionToMatch = position.slice(1).toString().replaceAll(",", " ")
     const letterToDisplay = letterPositions[`${positionToMatch}`]
   
-    setLetter(letterToDisplay ? letterToDisplay : "")
+    setLetter(letterToDisplay ? letterToDisplay : letter)
 
 
     //display numbers (1 across, etc)

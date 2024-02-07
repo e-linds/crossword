@@ -55,7 +55,6 @@ function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, o
 
     }
 
-    // console.log(letterPositions)
 
     return(
         <div id="grid2">

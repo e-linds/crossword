@@ -358,26 +358,26 @@ function createDisplayClues() {
         <main id="createpage-container">
             <div> </div>
             <div id="createpuzzletitle">
-            {puzzleNameEditMode ?
-            <form id="puzzlenameeditmode" onSubmit={handlePuzzleNameSubmit}>
-                <input name="puzzlename" placeholder={puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}></input>
-                <button>✅</button>
-            </form>
-            :
-            <h1 onDoubleClick={handlePuzzleEdit}>{puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}</h1>
-            }
+                {puzzleNameEditMode ?
+                <form id="puzzlenameeditmode" onSubmit={handlePuzzleNameSubmit}>
+                    <input name="puzzlename" placeholder={puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}></input>
+                    <button>✅</button>
+                </form>
+                :
+                <h1 onDoubleClick={handlePuzzleEdit}>{puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}</h1>
+                }
             </div>
             <div>
-            {displayClues.length > 0 ?
-            <>
-            <h2>Clues</h2>
-            {displayClues.map((each) => {
-                return <CreatedClue key={each} text={each} savedClues={savedClues} savedWords={savedWords}/>
-            })}
-            </>
-            :
-            <h3>Clues will display here</h3>
-            }
+                {displayClues.length > 0 ?
+                <>
+                <h2>Clues</h2>
+                {displayClues.map((each) => {
+                    return <CreatedClue key={each} text={each} savedClues={savedClues} savedWords={savedWords}/>
+                })}
+                </>
+                :
+                <h3>Clues will display here</h3>
+                }
             </div>
             <div >
                 <GridCreate 

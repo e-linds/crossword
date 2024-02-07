@@ -26,6 +26,7 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
 
     let { puzzleid } = useParams();
     const thispuzzleid = parseInt(Object.values({ puzzleid }))
+    const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
     const existingAttempt = UPAttempts.find((each) => each.puzzle_id === thispuzzleid && each.user_id === user.id)
 
     createPositionsDict(puzzleWords, letterPositions)
@@ -33,7 +34,6 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
 
     useEffect(() => {
     
-            const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
             setPuzzleWords(thispuzzle ? thispuzzle.words : {})
 
 
@@ -162,6 +162,8 @@ function addGuess() {
 
         })}}}
 
+        console.log(currentGuesses)
+
 
     
     function clearGuess() {
@@ -242,8 +244,8 @@ function addGuess() {
         }}
     
     
-        //this function takes an array of word objects and arranges them in an object with [row_index column_index]: letter
-        function createPositionsDict(array, resultObj) {
+    //this function takes an array of word objects and arranges them in an object with [row_index column_index]: letter
+    function createPositionsDict(array, resultObj) {
     
         //naive solution - this is not very efficient, can optimize later
             for (const each in array) {
@@ -279,7 +281,7 @@ function addGuess() {
 
 
 
-function createDisplayClues() {
+    function createDisplayClues() {
 
     let array = []
     for (const each in orderedPositions) {
@@ -291,25 +293,25 @@ function createDisplayClues() {
         array.push(finishedClue)  
     }
     setDisplayClues(array)
-}
-
-
-function checkAccuracy() {
-
-    const letterLocations = Object.keys(letterPositions)
-
-    let all_accurate = true
-
-    for (const each in letterLocations) {
-        if (guessPositions[letterLocations[each]] === letterPositions[letterLocations[each]]) {
-        } else {
-            all_accurate = false
-        }}
-
-    if (all_accurate) {
-        setAccuracy(true)
     }
-    setShowPopup(true)
+
+
+    function checkAccuracy() {
+
+        const letterLocations = Object.keys(letterPositions)
+
+        let all_accurate = true
+
+        for (const each in letterLocations) {
+            if (guessPositions[letterLocations[each]] === letterPositions[letterLocations[each]]) {
+            } else {
+                all_accurate = false
+            }}
+
+        if (all_accurate) {
+            setAccuracy(true)
+        }
+        setShowPopup(true)
 }
 
 function handlePopupClose() {
@@ -325,30 +327,11 @@ function clearPuzzleandExit() {
 
     
     return(
-        <main id="createpage-container">
+        <main id="solvepage-container">
             <div>
-            <h2>Clues</h2>
-            {displayClues.length > 0 ?
-            <>
-            {displayClues.map((each) => {
-                return <p key={each.id}>{each}</p>
-            })}
-            </>
-            :
-            null
-            }
-            </div>
-            <GridSolve 
-            guessInput={guessInput} 
-            selectedCells={selectedCells} 
-            setSelectedCells={setSelectedCells} 
-            puzzleWords={puzzleWords}
-            orderedPositions={orderedPositions}
-            guessPositions={guessPositions}
-            currentGuesses={currentGuesses}
-            letterPositions={letterPositions}
-            />
-            <div id="create-details">
+                <div> </div>
+                <h1 id="solvepuzzletitle">{thispuzzle.name}</h1>
+                <div id="solve-details">
                     <form id="newword-form" onSubmit={handleSubmit}>
                         <input name="new-guess" placeholder="Enter Guess Here" onChange={handleGuessTyping}></input>
                         <button type="submit">Confirm Guess</button>
@@ -371,7 +354,29 @@ function clearPuzzleandExit() {
                         </DialogContent>
                 }
                 </Dialog>
-                
+                </div>
+            </div>
+            <GridSolve 
+            guessInput={guessInput} 
+            selectedCells={selectedCells} 
+            setSelectedCells={setSelectedCells} 
+            puzzleWords={puzzleWords}
+            orderedPositions={orderedPositions}
+            guessPositions={guessPositions}
+            currentGuesses={currentGuesses}
+            letterPositions={letterPositions}
+            />
+            <div id="solveclues">
+            <h2>Clues</h2>
+                {displayClues.length > 0 ?
+                <>
+                {displayClues.map((each) => {
+                    return <p key={each.id}>{each}</p>
+                })}
+                </>
+                :
+                null
+                }
             </div>
         </main>
     )
