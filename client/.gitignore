@@ -22,5 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-backend/server/secretfile.py
-secretfile.py
+backend/server/secretFile.py
+secretFile.py
