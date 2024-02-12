@@ -3,6 +3,7 @@ from flask import request, session
 
 from config import app, db
 from models import *
+from webscraping import get_words, filter_words
 
 @app.route('/signup', methods = ["POST"])
 def signup():
@@ -241,7 +242,19 @@ def upattempt_guesses(id):
             return {}, 204
         except:
             return {"error": "unable to delete"}
+        
 
+
+@app.route('/suggestions/<letter>/<int:index>/<int:length>', methods = ["GET"])
+def get_suggestions(letter, index, length):
+
+    if request.method == "GET":
+        return_suggestions = []
+        suggestions = get_words(letter, index, length)
+        # for each in suggestions:
+        #     return_suggestions.append(each.to_dict())
+
+        return suggestions, 200
     
 
 if __name__ == '__main__':

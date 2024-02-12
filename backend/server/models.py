@@ -52,7 +52,7 @@ class Puzzle(db.Model, SerializerMixin):
     __tablename__ = "puzzles"
 
     id = Column(Integer, primary_key = True)
-    name = Column(String)
+    name = Column(String, nullable = False)
     user_id = Column(Integer, ForeignKey("users.id"))
 
     words = relationship("Word", back_populates = "puzzle")

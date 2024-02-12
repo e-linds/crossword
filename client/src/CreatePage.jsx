@@ -6,6 +6,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import CreatedClue from "./CreatedClue"
+import _ from 'underscore'
+import { FormControlLabel } from "@mui/material";
 
 function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     const navigate = useNavigate()
@@ -16,10 +18,14 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     const [displayClues, setDisplayClues] = useState([])
     const [selectedCells, setSelectedCells] = useState([])
     const [orderedPositions, setOrderedPositions] = useState([])
+    const [letterPositions, setLetterPositions] = useState({})
     const [showDeletePopup, setShowDeletePopup] = useState(false)
     const [puzzleName, setPuzzleName] = useState("")
     const [puzzleNameEditMode, setPuzzleNameEditMode] = useState(false)
     const [repeatWord, setRepeatWord] = useState(false)
+    const [wordSuggestions, setWordSuggestions] = useState({})
+    const [showWordSuggestions, setShowWordSuggestions] = useState(false)
+    const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Word Suggestions")
      
 
     let { puzzleid } = useParams();
@@ -41,7 +47,6 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
 
                 setSavedClues(dict)
             }
-
 
             }
 
@@ -99,6 +104,9 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
 
 //add a word, regardless of whether this is first word or additional - defaults to puzzle id being current id
     function addWord(input = thispuzzleid) {
+
+        setShowWordSuggestions(false)
+        setSuggestionButtonContent("Get Word Suggestions")
 
         if (wordInput.length > 1) {
 
@@ -280,7 +288,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
                 wordDirectionInfo[each].push(count)
 
             }}
-            console.log(wordDirectionInfo)
+            // console.log(wordDirectionInfo)
 
         setOrderedPositions(wordDirectionInfo)
         }}
@@ -346,14 +354,47 @@ function createDisplayClues() {
     }}
 
     
-// console.log(userPuzzles)
-    // console.log(displayClues)
-    // console.log(savedClues)
-    // console.log(orderedPositions)
-    // console.log(savedWords)
+
+    function getSuggestions(letter, index, length) {
+       
+
+            fetch(`/api/suggestions/${letter}/${index}/${length}`)
+            .then(r => r.json())
+            .then(data => {
+                console.log(data)
+                setWordSuggestions(data)
+                setShowWordSuggestions(true)
+                setSuggestionButtonContent("Refresh Word Suggestions")
+
+        })
+
+        
 
 
+    }
 
+    function handleSuggestionsClick() {
+        setSuggestionButtonContent("Loading words...")
+
+        const length = selectedCells.length
+        let index 
+        let letter
+
+        let count = -1
+        for (const each in selectedCells) {
+            count = count + 1
+            const cell = `${selectedCells[each][1]} ${selectedCells[each][2]}`
+            if (letterPositions[cell]) {
+                letter = letterPositions[cell]
+                index = count
+            }
+        }
+
+        getSuggestions(letter, index, length)
+
+    }
+
+ 
     return(
         <main id="createpage-container">
             <div> </div>
@@ -386,16 +427,42 @@ function createDisplayClues() {
                 setSelectedCells={setSelectedCells} 
                 savedWords={savedWords}
                 orderedPositions={orderedPositions}
+                letterPositions={letterPositions}
+                setLetterPositions={setLetterPositions}
                 />
             </div>
             <div id="create-details">
                 <h2>Add to Puzzle</h2>
                     <form id="newword-form" onSubmit={handleSubmit}>
                         <input name="new-word" placeholder="new word here" onChange={handleWordTyping} value={wordInput ? wordInput : ""}></input>
-                        <div>other text about other words</div>
-                        <p>suggestion</p>
-                        <p>suggestion</p>
-                        <p>suggestion</p>
+                        <button onClick={handleSuggestionsClick}>{suggestionButtonContent}</button>
+                        <div>{showWordSuggestions ? 
+                        <div>
+                            {wordSuggestions["easy"] ? 
+                            <>
+                            <div><b>Easy</b></div>
+                            <p>{wordSuggestions["easy"]}</p>
+                            </>
+                            :
+                            null}
+                            {wordSuggestions["medium"] ? 
+                                <>
+                                <div><b>Less Easy</b></div>
+                                <p>{wordSuggestions["medium"]}</p>
+                                </>
+                            :
+                            null}
+                            {wordSuggestions["hard"] ? 
+                                <>
+                                <div><b>Not Easy</b></div>
+                                <p>{wordSuggestions["hard"]}</p>
+                                </>
+                            :
+                            null}
+                            </div>
+                        :
+                        null}
+                        </div>
                         <textarea name="new-clue" placeholder="clue goes here" onChange={handleClueTyping} value={clueInput ? clueInput : ""}></textarea>
                         <div>text about suggested clue from AI</div>
                         <p>suggestion</p>
