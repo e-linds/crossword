@@ -1,10 +1,16 @@
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import CreatePage from "./CreatePage"
 
 
-function CreateOptions({ userPuzzles }) {
+function CreateOptions({ userPuzzles, setCurrentTab }) {
+    const location = useLocation()
     const [showExisting, setShowExisting] = useState(false)
+
+    useEffect(() => {
+        setCurrentTab(location.pathname)
+
+    },[])
 
 function handleClick() {
     setShowExisting(!showExisting)

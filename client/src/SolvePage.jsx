@@ -1,14 +1,15 @@
 import GridSolve from "./GridSolve"
 import { useEffect, useInsertionEffect, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
 
-function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
+function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle, setCurrentTab }) {
     const navigate = useNavigate()
+    const location = useLocation()
     const [guessInput, setGuessInput] = useState("")
     const [puzzleWords, setPuzzleWords] = useState({})
     const [puzzleClues, setPuzzleClues] = useState({})
@@ -33,6 +34,8 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle }) {
     createPositionsDict(currentGuesses, guessPositions)
 
     useEffect(() => {
+
+            setCurrentTab(location.pathname)
     
             setPuzzleWords(thispuzzle ? thispuzzle.words : {})
 

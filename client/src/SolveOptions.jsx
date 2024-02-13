@@ -1,6 +1,14 @@
-import { Link } from "react-router-dom"
+import { useEffect } from 'react'
+import { Link, useLocation } from "react-router-dom"
 
-function SolveOptions({ userPuzzles }) {
+function SolveOptions({ userPuzzles, setCurrentTab }) {
+    const location = useLocation()
+
+    useEffect(() => {
+        setCurrentTab(location.pathname)
+
+    },[])
+
     return(
         <div>
             <h2>Choose a puzzle to solve...</h2>

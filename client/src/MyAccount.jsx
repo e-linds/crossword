@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
-function MyAccount({ user, setUser, userPuzzles }) {
+function MyAccount({ user, setUser, userPuzzles, setCurrentTab }) {
+    const location = useLocation()
     const [longestWord, setLongestWord] = useState("")
     const [mostUsedLetter, setMostUsedLetter] = useState("")
 
 
     useEffect(() => {
         findWordRecords()
+        setCurrentTab(location.pathname)
 
     }, [])
 

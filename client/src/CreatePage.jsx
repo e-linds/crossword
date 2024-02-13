@@ -1,6 +1,6 @@
 import GridCreate from "./GridCreate"
 import { useEffect, useInsertionEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -9,8 +9,9 @@ import CreatedClue from "./CreatedClue"
 import _ from 'underscore'
 import { FormControlLabel } from "@mui/material";
 
-function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
+function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurrentTab }) {
     const navigate = useNavigate()
+    const location = useLocation()
     const [wordInput, setWordInput] = useState("")
     const [clueInput, setClueInput] = useState("")
     const [savedWords, setSavedWords] = useState({})
@@ -28,12 +29,14 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Word Suggestions")
     const [clueSuggestion, setClueSuggestion] = useState("")
     const [showClueSuggestion, setShowClueSuggestion] = useState(false)
-     
+
 
     let { puzzleid } = useParams();
     const thispuzzleid = parseInt(Object.values({ puzzleid }))
 
     useEffect(() => {
+
+        setCurrentTab(location.pathname)
     
             const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
             setSavedWords(thispuzzle ? thispuzzle.words : {})
@@ -406,7 +409,7 @@ function createDisplayClues() {
 
     }
 
- 
+
     return(
         <main id="createpage-container">
             <div> </div>

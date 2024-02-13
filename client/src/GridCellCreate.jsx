@@ -30,15 +30,37 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
 
     let cellStyle
 
+
+
     if (selected === false || selectedCells.length === 0) {
         cellStyle = {
-            backgroundColor: "white"
+            backgroundColor: "white",
+            borderWidth: "1px"
         }
-    } else if (selected) {
+    } else if (selected && selectedCells.find(each => each[1] === position[1] && each[2] === position[2])) {
         cellStyle = {
-            backgroundColor: "#9DCEFC"
+            backgroundColor: "#9DCEFC",
+            borderWidth: "1px"
         }
     }
+
+    if (position[2] === 17) {
+        cellStyle = {
+            borderRight: "solid",
+            borderWidth: "1px"
+        }
+
+    }
+
+    if (position[1] === 17) {
+        cellStyle = {
+            borderBottom: "solid",
+            borderWidth: "1px"
+        }
+
+    }
+
+
 
     // this function sorts the array by initial index, which is the sum of the two position coordinates. This guarantees we will start with the topmost/leftmost grid cell
     function sortArray(input) {

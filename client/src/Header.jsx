@@ -1,13 +1,41 @@
 import { Link } from 'react-router-dom'
 
-function Header() {
+function Header({ currentTab, setCurrentTab }) {
+
+    
     return(
         <div id="header-container">
-            <span><Link to="/home">Home</Link></span>
+            <span onClick={() => setCurrentTab("/home")}>
+                <Link to="/home">
+                    {currentTab.includes("home")
+                    ?
+                    <b>Home</b>
+                    :
+                    "Home"}
+                </Link>
+            </span>
             <div id="header-details">
-                <Link to="/createoptions">Create</Link>
-                <Link to="/solveoptions">Solve</Link>
-                <Link to="/myaccount">My Account</Link>
+                <Link to="/createoptions">
+                    {currentTab.includes("create")
+                    ?
+                    <b>Create</b>
+                    :
+                    "Create"}
+                </Link>
+                <Link to="/solveoptions">
+                    {currentTab.includes("solve")
+                    ?
+                    <b>Solve</b>
+                    :
+                    "Solve"}
+                </Link>
+                <Link to="/myaccount">
+                    {currentTab.includes("myaccount")
+                    ?
+                    <b>My Account</b>
+                    :
+                    "My Account"}
+                </Link>
             </div>
         </div>
     )
