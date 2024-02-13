@@ -15,13 +15,12 @@ flask-restful = "*"
 flask-cors = "*"
 faker = "*"
 python-dotenv = "*"
-
 importlib-resources = "5.10.0"
 jsonify = "0.5"
 requests = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
+openai = "*"
 
 [requires]
 python_full_version = "3.8.13"
-

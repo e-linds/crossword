@@ -26,6 +26,8 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     const [wordSuggestions, setWordSuggestions] = useState({})
     const [showWordSuggestions, setShowWordSuggestions] = useState(false)
     const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Word Suggestions")
+    const [clueSuggestion, setClueSuggestion] = useState("")
+    const [showClueSuggestion, setShowClueSuggestion] = useState(false)
      
 
     let { puzzleid } = useParams();
@@ -106,6 +108,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle }) {
     function addWord(input = thispuzzleid) {
 
         setShowWordSuggestions(false)
+        setShowClueSuggestion(false)
         setSuggestionButtonContent("Get Word Suggestions")
 
         if (wordInput.length > 1) {
@@ -355,7 +358,7 @@ function createDisplayClues() {
 
     
 
-    function getSuggestions(letter, index, length) {
+    function getWordSuggestions(letter, index, length) {
        
 
             fetch(`/api/suggestions/${letter}/${index}/${length}`)
@@ -367,13 +370,9 @@ function createDisplayClues() {
                 setSuggestionButtonContent("Refresh Word Suggestions")
 
         })
-
-        
-
-
     }
 
-    function handleSuggestionsClick() {
+    function handleWordSuggestionsClick() {
         setSuggestionButtonContent("Loading words...")
 
         const length = selectedCells.length
@@ -390,7 +389,20 @@ function createDisplayClues() {
             }
         }
 
-        getSuggestions(letter, index, length)
+        getWordSuggestions(letter, index, length)
+
+    }
+
+    function getClueSuggestion() {
+        
+
+        fetch(`/api/suggestions/${wordInput}`)
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            setClueSuggestion(data)
+            setShowClueSuggestion(true)
+        })
 
     }
 
@@ -435,7 +447,25 @@ function createDisplayClues() {
                 <h2>Add to Puzzle</h2>
                     <form id="newword-form" onSubmit={handleSubmit}>
                         <input name="new-word" placeholder="new word here" onChange={handleWordTyping} value={wordInput ? wordInput : ""}></input>
-                        <button onClick={handleSuggestionsClick}>{suggestionButtonContent}</button>
+                        <textarea name="new-clue" placeholder="clue goes here" onChange={handleClueTyping} value={clueInput ? clueInput : ""}></textarea>
+                        <button type="submit">Confirm Word & Clue</button>
+                        <Dialog id="repeatwordpopup" open={repeatWord} onClose={handleRepeatWordClose}>
+                        <DialogContent >
+                            <DialogContentText id="emojitext">🤦🏻‍♀️</DialogContentText>
+                            <DialogContentText>{wordInput.toUpperCase()} is already in the puzzle. Please try another word.</DialogContentText>
+                        </DialogContent>
+                </Dialog>
+                    </form>  
+                <button onClick={clearWord}>To clear a word from the board, select all its cells, then click this button</button>
+                <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
+                <Dialog id="deletepopup" open={showDeletePopup} onClose={handleDeleteClose}>
+                        <DialogContent >
+                            <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
+                            <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
+                            <Button onClick={handleDeleteClose}>Actually, never mind</Button>
+                        </DialogContent>
+                </Dialog>
+                <button onClick={handleWordSuggestionsClick}>{suggestionButtonContent}</button>
                         <div>{showWordSuggestions ? 
                         <div>
                             {wordSuggestions["easy"] ? 
@@ -463,27 +493,12 @@ function createDisplayClues() {
                         :
                         null}
                         </div>
-                        <textarea name="new-clue" placeholder="clue goes here" onChange={handleClueTyping} value={clueInput ? clueInput : ""}></textarea>
-                        <div>text about suggested clue from AI</div>
-                        <p>suggestion</p>
-                        <p>suggestion</p>
-                        <button type="submit">Confirm Word & Clue</button>
-                        <Dialog id="repeatwordpopup" open={repeatWord} onClose={handleRepeatWordClose}>
-                        <DialogContent >
-                            <DialogContentText id="emojitext">🤦🏻‍♀️</DialogContentText>
-                            <DialogContentText>{wordInput.toUpperCase()} is already in the puzzle. Please try another word.</DialogContentText>
-                        </DialogContent>
-                </Dialog>
-                    </form>  
-                <button onClick={clearWord}>To clear a word from the board, select all its cells, then click this button</button>
-                <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
-                <Dialog id="deletepopup" open={showDeletePopup} onClose={handleDeleteClose}>
-                        <DialogContent >
-                            <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
-                            <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
-                            <Button onClick={handleDeleteClose}>Actually, never mind</Button>
-                        </DialogContent>
-                </Dialog>
+                        
+                        <button onClick={getClueSuggestion}>Get Clue Suggestion</button>
+                        {showClueSuggestion ? 
+                        <div>{clueSuggestion}</div>
+                        :
+                        null}
             </div>
         </main>
     )

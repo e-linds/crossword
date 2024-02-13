@@ -4,6 +4,7 @@ from flask import request, session
 from config import app, db
 from models import *
 from webscraping import get_words, filter_words
+from openaiclues import get_clue
 
 @app.route('/signup', methods = ["POST"])
 def signup():
@@ -246,7 +247,7 @@ def upattempt_guesses(id):
 
 
 @app.route('/suggestions/<letter>/<int:index>/<int:length>', methods = ["GET"])
-def get_suggestions(letter, index, length):
+def get_word_suggestions(letter, index, length):
 
     if request.method == "GET":
         return_suggestions = []
@@ -255,6 +256,15 @@ def get_suggestions(letter, index, length):
         #     return_suggestions.append(each.to_dict())
 
         return suggestions, 200
+    
+
+@app.route('/suggestions/<word>', methods=["GET"])
+def get_clue_suggestions(word):
+
+    if request.method == "GET":
+        clue = get_clue(word)
+        return clue, 200
+
     
 
 if __name__ == '__main__':

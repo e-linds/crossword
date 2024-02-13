@@ -28,4 +28,6 @@ api = Api(app)
 CORS(app)
 
 app.secret_key = os.environ.get("secret_key")
+app.wordsapikey = os.environ.get("wordsapikey")
+app.openai_api_key = os.environ.get("OPENAI_API_KEY")
 

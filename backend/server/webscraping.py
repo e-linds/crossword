@@ -1,8 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 import random
-from secretfile import wordsapikey
+from config import app
+# from env import wordsapikey
 
+wordsapikey = app.wordsapikey
 
 def filter_words(input):
 
@@ -89,11 +91,11 @@ def get_words(letter, index, length):
 
         if results:
             results_array = results.text.split(" ")
-            random_words = random.sample(results_array, 6)
+            random_words = random.sample(results_array, 10)
             for each in random_words:
                 suggestions_array.append(each)
         elif resultsalt:
-            random_words = random.sample(results, 6)
+            random_words = random.sample(results, 10)
             for each in random_words:
                 suggestions_array.append(each.text)
 
