@@ -246,12 +246,12 @@ def upattempt_guesses(id):
         
 
 
-@app.route('/suggestions/<letter>/<int:index>/<int:length>', methods = ["GET"])
-def get_word_suggestions(letter, index, length):
+@app.route('/suggestions/<int:length>/<letter>/<int:index>', methods = ["GET"])
+def get_word_suggestions(length, letter, index):
 
     if request.method == "GET":
         return_suggestions = []
-        suggestions = get_words(letter, index, length)
+        suggestions = get_words(length, letter, index)
         # for each in suggestions:
         #     return_suggestions.append(each.to_dict())
 
@@ -263,7 +263,11 @@ def get_clue_suggestions(word):
 
     if request.method == "GET":
         clue = get_clue(word)
-        return clue, 200
+        final_clue = f'"{clue}"'
+        # clueobj = {
+        #     "data": clue
+        # }
+        return final_clue, 200
 
     
 

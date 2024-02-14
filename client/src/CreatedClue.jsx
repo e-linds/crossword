@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-function CreatedClue({ text, savedClues, savedWords }) {
+function CreatedClue({ text, savedClues }) {
     const [clueEditMode, setClueEditMode] = useState(false)
     const [wordId, setWordId] = useState("")
     const [newClue, setNewClue] = useState("")
@@ -62,11 +62,12 @@ function CreatedClue({ text, savedClues, savedWords }) {
         <>
         {clueEditMode ? 
         <div>
-            <p>{justNumDirection}</p>
+            <p id="clueedit-label">{justNumDirection}</p>
             <form onSubmit={handleSubmit}>
-            <textarea value={newClue} name="clue" onChange={handleTyping}></textarea>
-            <button type="submit">ok</button>
-            <button type="button" onClick={() => setClueEditMode(false)}>X</button>
+            <textarea id="editclue-input" style={{height: "80px"}} value={newClue} name="clue" onChange={handleTyping}></textarea>
+            <br></br>
+            <button className="editclue-btn" type="submit">ok</button>
+            <button className="editclue-btn" type="button" onClick={() => setClueEditMode(false)}>nvm</button>
         </form>
         </div> 
         

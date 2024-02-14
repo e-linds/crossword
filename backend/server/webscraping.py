@@ -19,7 +19,6 @@ def filter_words(input):
     response = requests.get(url, headers=headers)
 
     print(response.json())
-    # print(len(response.json()["results"]))
 
     if response.json().get("frequency"):
         print(response.json().get("frequency").get("perMillion"))
@@ -28,15 +27,20 @@ def filter_words(input):
         print("false")
         return False
     
-suggestions_array = []
-final_words = {}
+
     
-def get_words(letter, index, length):
+def get_words(length, letter="000", index=999, ):
+
+    suggestions_array = []
+    final_words = {}
 
 
     def getIndexText(input):
 
-        index = input + 1
+        if input == 999:
+            return 999
+        else:
+            index = input + 1
         if index == 1:
             return "first"
         elif index == 2:
@@ -68,7 +72,7 @@ def get_words(letter, index, length):
         elif index == 15:
             return "fifteenth"
         else:
-            print("something's wrong")
+            return ""
 
 
 
@@ -81,7 +85,17 @@ def get_words(letter, index, length):
 
     def add_words(input):
 
-        testurl = f"https://www.bestwordlist.com/p/{letterToMatch}/1/words{wordLength}letters{matchLetterIndex}letter{letterToMatch}{input}.htm"
+        if matchLetterIndex == 999 and letterToMatch == "000":
+            
+            testurl = f"https://www.bestwordlist.com/{wordLength}letterwords.htm"
+
+        elif matchLetterIndex == "first":
+
+            testurl = f"https://www.bestwordlist.com/d/{letterToMatch}/1/{wordLength}letterwordsbeginning{letterToMatch}.htm"
+        
+        else:
+
+            testurl = f"https://www.bestwordlist.com/p/{letterToMatch}/1/words{wordLength}letters{matchLetterIndex}letter{letterToMatch}{input}.htm"
 
         page = requests.get(testurl)
         soup = BeautifulSoup(page.content, "html.parser")
@@ -106,8 +120,6 @@ def get_words(letter, index, length):
     for each in pagenumber_array:
         add_words(each)
 
-
-    # print(suggestions_array)
         
     filtered_words_easy = []
     filtered_words_medium = []
@@ -134,37 +146,10 @@ def get_words(letter, index, length):
     random_word(filtered_words_hard, "hard")
             
   
-    # final_words["easy"] = random.choice(filtered_words_easy)
-    # final_words["medium"] = random.choice(filtered_words_medium)
-    # final_words["hard"] = random.choice(filtered_words_hard)
-
-    # final_words["easy"] = filtered_words_easy
-    # final_words["medium"] = filtered_words_medium
-    # final_words["hard"] = filtered_words_hard
-
-# FOR SOME REASON THE RANDOM METHODS ARE NOT WORKING, I THINK IT'S BC THE SAMPLE SIZE ISNT CORRECT
     print(final_words)
     return final_words
     
-    # sample = {
-    #     "easy": [
-    #         "hello"
-           
-    #     ],
-    #     "medium": [
-    #         "daffodil"
-           
-    #     ],
-    #     "hard": [
-    #         "bucolic"
-    #     ]
-    # }
-
-    # return sample
-    
-
-
-
+   
 
 
 

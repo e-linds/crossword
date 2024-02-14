@@ -8,7 +8,7 @@ def get_clue(input):
     model="gpt-3.5-turbo",
     messages=[
       {"role": "system", "content": "You are assisting a puzzle master in creating crossword puzzle clues with contemporary tone of voice."},
-      {"role": "user", "content": f"Give me a clue that hints toward the word {input}."}
+      {"role": "user", "content": f"Give me a clue that hints toward the word {input}. Please do not include any quotation marks."}
     ]
   )
 

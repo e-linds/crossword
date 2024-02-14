@@ -33,12 +33,12 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
 
     let { puzzleid } = useParams();
     const thispuzzleid = parseInt(Object.values({ puzzleid }))
+    const thispuzzle = thispuzzleid ? userPuzzles.find(each => each.id === thispuzzleid) : null
 
     useEffect(() => {
 
         setCurrentTab(location.pathname)
     
-            const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
             setSavedWords(thispuzzle ? thispuzzle.words : {})
             setPuzzleName(thispuzzle ? thispuzzle.name : "")
             setSelectedCells([])
@@ -58,6 +58,13 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
     }, [])
 
     useEffect(() => {
+        if (selectedCells.length === 0) {
+            setWordSuggestions({})
+        }
+    },[selectedCells])
+    
+
+    useEffect(() => {
 
         assignNumberedCells()
 
@@ -70,7 +77,6 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
             createDisplayClues()
 
     }}, [orderedPositions, savedWords, wordInput])
-
 
     function getDirection() {
 
@@ -113,6 +119,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
         setShowWordSuggestions(false)
         setShowClueSuggestion(false)
         setSuggestionButtonContent("Get Word Suggestions")
+        setWordSuggestions({})
 
         if (wordInput.length > 1) {
 
@@ -212,16 +219,14 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
 
         })
 
-
-
-
                 }
 
 
     function clearWord() {
-        console.log(savedWords)
 
         const firstIndex = selectedCells[0]
+
+        const howManyLeft = savedWords.length
 
         let wordToClear
         let keyToClear
@@ -232,28 +237,56 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
             if (position.toString() === firstIndex.toString()) {
                 wordToClear = item
                 keyToClear = each
-                
+
             }
         }
-       
-    
+
+   //backend clear word
         fetch(`/api/words/${wordToClear.id}`, {
             method: "DELETE"
         })
         .then(r => {})
         .then(data => {
 
+            //frontend clear word
+
             let dict = savedWords
-
             delete dict[keyToClear]
-
             setSavedWords(dict)
 
-        
-        })
-
+            if (howManyLeft <= 1) {
+                if (thispuzzleid) {
+                    deletePuzzle(thispuzzleid)
+                    navigate("/create")
+                }
+            } 
     
+            const rowToClear = wordToClear.row_index
+            const columnToClear = wordToClear.column_index
+    
+            let dict2 = {...letterPositions}
+            let letterarray = wordToClear.name.split("")    
+            let count = 0
+            for (const each in letterarray) {
+                if (wordToClear.direction === "across") {
+                    delete dict2[`${rowToClear} ${columnToClear + count}`]
+                } else if (wordToClear.direction === "down") {
+                    delete dict2[`${rowToClear + count} ${columnToClear}`]
+                }
+                count = count + 1
+            }
+
+            setLetterPositions(dict2)
+            setSelectedCells([])
+
+            assignNumberedCells()
+        
+        }
+        )
     }
+
+    console.log(savedWords)
+    console.log(letterPositions)
 
 
     //this function creates the orderedPositions object
@@ -335,6 +368,7 @@ function createDisplayClues() {
     function handlePuzzleEdit() {
         setPuzzleNameEditMode(true)
     }
+    
 
 
    function handlePuzzleNameSubmit(e) {
@@ -361,10 +395,10 @@ function createDisplayClues() {
 
     
 
-    function getWordSuggestions(letter, index, length) {
+    function getWordSuggestions(length, letter="000", index="000") {
        
 
-            fetch(`/api/suggestions/${letter}/${index}/${length}`)
+            fetch(`/api/suggestions/${length}/${letter}/${index}`)
             .then(r => r.json())
             .then(data => {
                 console.log(data)
@@ -392,7 +426,7 @@ function createDisplayClues() {
             }
         }
 
-        getWordSuggestions(letter, index, length)
+        getWordSuggestions(length, letter, index)
 
     }
 
@@ -403,11 +437,14 @@ function createDisplayClues() {
         .then(r => r.json())
         .then(data => {
             console.log(data)
-            setClueSuggestion(data)
+            setClueSuggestion(`${data}`)
             setShowClueSuggestion(true)
         })
 
     }
+
+    console.log(orderedPositions)
+    console.log(selectedCells)
 
 
     return(

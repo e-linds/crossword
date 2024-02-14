@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import GridCellCreate from "./GridCellCreate"
 
-function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions, letterPositions, setLetterPositions }) {
+function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions, letterPositions, setLetterPositions}) {
 
     useEffect(() => {
         if (savedWords) {
@@ -15,15 +15,16 @@ function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, o
     let column_index
     let letterPositionsProxy = {}
 
-    // console.log(letterPositions)
 
+// this function creates the letterPositions object
     function displaySavedWords() {
 
     //naive solution - this is not very efficient, can optimize later
         for (const each in savedWords) {
             const length = savedWords[each].length
-            
 
+            if (savedWords[each]) {
+            
             let count = -1
             for (const letter in savedWords[each].name) {
                 const ind_letter = savedWords[each].name[letter]
@@ -48,7 +49,7 @@ function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, o
 
                 }
             
-        }
+        }}
 
         setLetterPositions(letterPositionsProxy)
 

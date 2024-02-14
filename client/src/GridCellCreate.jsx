@@ -8,30 +8,22 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
     const [selected, setSelected] = useState(false)
     const [letter, setLetter] = useState("")
     const [cellNumber, setCellNumber] = useState("")
+    const [refreshCell, setRefreshCell] = useState(false)
     // const { DragSelection } = useSelectionContainer()
 
     const position = [(row_index + column_index), row_index, column_index]    
-    // console.log(`${position} ${selected}`)
-    
-
     useEffect(() => {
         displayLetters()
-        // setSelected(false)
-        // setSelected(false)
-        // setSelectedCells([])
-    }, [letterPositions, letter, savedWords])
+    }, [letterPositions, orderedPositions, savedWords])
+    
 
     useEffect(() => {
         addLetters()
-    }, [wordInput])
-
-    
+    }, [wordInput, savedWords])
 
 
     let cellStyle
-
-
-
+//these if/elses set the blue background and create borders on sides of the grid
     if (selected === false || selectedCells.length === 0) {
         cellStyle = {
             backgroundColor: "white",
@@ -118,24 +110,30 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
         }}
 
     }
-
+//this displays both letters and label numbers in the grid
    function displayLetters() {
 
-    //display letters
     const positionToMatch = position.slice(1).toString().replaceAll(",", " ")
     const letterToDisplay = letterPositions[`${positionToMatch}`]
-  
-    setLetter(letterToDisplay ? letterToDisplay : letter)
 
+     if (letterToDisplay) {
+        setLetter(letterToDisplay) 
+    } else if (wordInput) {
+        
+    } else {
+        setLetter("")
+    }
 
     //display numbers (1 across, etc)
     if (orderedPositions) {
+
+        setCellNumber("")
         for (const each in orderedPositions) {
            
             if ((orderedPositions[each][0]).toString() === position.toString()) {
                 const numberToDisplay = orderedPositions[each][3]
                 setCellNumber(numberToDisplay)
-            }
+            } 
         }
     }
 

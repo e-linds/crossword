@@ -316,4 +316,20 @@ button:focus-visible {
   border: none
 }
 
+#clueedit-label {
+  margin: 4px
+}
+
+#editclue-input {
+  font-size: 14px;
+  border: solid;
+  border-width: 1px
+}
+
+.editclue-btn {
+  padding: 5px;
+  width: 40%;
+  margin: 5px
+}
+
 
