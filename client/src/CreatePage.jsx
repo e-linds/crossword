@@ -26,7 +26,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
     const [repeatWord, setRepeatWord] = useState(false)
     const [wordSuggestions, setWordSuggestions] = useState({})
     const [showWordSuggestions, setShowWordSuggestions] = useState(false)
-    const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Word Suggestions")
+    const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Words")
     const [clueSuggestion, setClueSuggestion] = useState("")
     const [showClueSuggestion, setShowClueSuggestion] = useState(false)
 
@@ -118,7 +118,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
 
         setShowWordSuggestions(false)
         setShowClueSuggestion(false)
-        setSuggestionButtonContent("Get Word Suggestions")
+        setSuggestionButtonContent("Get Words")
         setWordSuggestions({})
 
         if (wordInput.length > 1) {
@@ -437,10 +437,18 @@ function createDisplayClues() {
         .then(r => r.json())
         .then(data => {
             console.log(data)
-            setClueSuggestion(`${data}`)
+            setClueSuggestion(`${data.data}`)
             setShowClueSuggestion(true)
         })
 
+    }
+
+    function useSuggestedClue() {
+        setClueInput(clueSuggestion)
+    }
+
+    function clearSelectedCells() {
+        setSelectedCells([])
     }
 
     console.log(orderedPositions)
@@ -460,7 +468,8 @@ function createDisplayClues() {
                 <h1 onDoubleClick={handlePuzzleEdit}>{puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}</h1>
                 }
             </div>
-            <div>
+            <div id="clues-div">
+                <>
                 {displayClues.length > 0 ?
                 <>
                 <h2>Clues</h2>
@@ -471,6 +480,21 @@ function createDisplayClues() {
                 :
                 <h3>Clues will display here</h3>
                 }
+                <div id="quicktools-container">
+                    <p id="quicktools-title">Quick Tools</p>
+                    <button onClick={clearWord} id="clearword-button"><b>Clear a saved word</b>(select all its cells then click here)</button>
+                    <button onClick={clearSelectedCells} id="clearselectedcells-button"><b>Clear all selected cells</b></button>
+
+                    <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
+                    <Dialog id="deletepopup" open={showDeletePopup} onClose={handleDeleteClose}>
+                            <DialogContent >
+                                <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
+                                <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
+                                <Button onClick={handleDeleteClose}>Actually, never mind</Button>
+                            </DialogContent>
+                    </Dialog>
+                </div>
+                </>
             </div>
             <div >
                 <GridCreate 
@@ -485,9 +509,12 @@ function createDisplayClues() {
             </div>
             <div id="create-details">
                 <h2>Add to Puzzle</h2>
+                <div id="addtopuzzle">
+                    <div id="addtopuzzle-instructions1">Select cells, then input word and clue.</div>
+                    <p className="smallfont" >Suggestion tools are available below.</p>
                     <form id="newword-form" onSubmit={handleSubmit}>
-                        <input name="new-word" placeholder="new word here" onChange={handleWordTyping} value={wordInput ? wordInput : ""}></input>
-                        <textarea name="new-clue" placeholder="clue goes here" onChange={handleClueTyping} value={clueInput ? clueInput : ""}></textarea>
+                        <input name="new-word" placeholder="WORD" onChange={handleWordTyping} value={wordInput ? wordInput : ""}></input>
+                        <textarea name="new-clue" placeholder="CLUE" onChange={handleClueTyping} value={clueInput ? clueInput : ""}></textarea>
                         <button type="submit">Confirm Word & Clue</button>
                         <Dialog id="repeatwordpopup" open={repeatWord} onClose={handleRepeatWordClose}>
                         <DialogContent >
@@ -496,16 +523,11 @@ function createDisplayClues() {
                         </DialogContent>
                 </Dialog>
                     </form>  
-                <button onClick={clearWord}>To clear a word from the board, select all its cells, then click this button</button>
-                <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
-                <Dialog id="deletepopup" open={showDeletePopup} onClose={handleDeleteClose}>
-                        <DialogContent >
-                            <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
-                            <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
-                            <Button onClick={handleDeleteClose}>Actually, never mind</Button>
-                        </DialogContent>
-                </Dialog>
-                <button onClick={handleWordSuggestionsClick}>{suggestionButtonContent}</button>
+                </div>
+                <div id="wordsuggestions-container">
+                        <p id="wordsuggestions-title">Word Suggestions</p>
+                        <p className="smallfont">Sourced from bestwordlist.com</p>
+                        <button onClick={handleWordSuggestionsClick}>{suggestionButtonContent}</button>
                         <div>{showWordSuggestions ? 
                         <div>
                             {wordSuggestions["easy"] ? 
@@ -517,14 +539,14 @@ function createDisplayClues() {
                             null}
                             {wordSuggestions["medium"] ? 
                                 <>
-                                <div><b>Less Easy</b></div>
+                                <div><b>Medium</b></div>
                                 <p>{wordSuggestions["medium"]}</p>
                                 </>
                             :
                             null}
                             {wordSuggestions["hard"] ? 
                                 <>
-                                <div><b>Not Easy</b></div>
+                                <div><b>Hard</b></div>
                                 <p>{wordSuggestions["hard"]}</p>
                                 </>
                             :
@@ -533,12 +555,19 @@ function createDisplayClues() {
                         :
                         null}
                         </div>
-                        
-                        <button onClick={getClueSuggestion}>Get Clue Suggestion</button>
+                    </div>
+                    <div id="cluesuggestions-container">
+                        <p id="cluesuggestions-title">Clue Suggestions</p>
+                        <p className="smallfont">Powered By OpenAI</p>
+                        <button onClick={getClueSuggestion}>Get Clue</button>
                         {showClueSuggestion ? 
+                        <>
                         <div>{clueSuggestion}</div>
+                        <button onClick={useSuggestedClue}>Use clue</button>
+                        </>
                         :
                         null}
+                    </div>
             </div>
         </main>
     )

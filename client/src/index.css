@@ -197,11 +197,21 @@ button:focus-visible {
   
 }
 
+/* @media (max-width: 1200px) {
+  #createpage-container  {
+
+
+}} */
+
 #createpuzzletitle {
   display: grid;
   grid-column-end: span 2;
   height: 150px;
 
+}
+
+#clues-div {
+  min-width: 180px
 }
 
 
@@ -221,10 +231,8 @@ button:focus-visible {
 }
 
 #create-details {
-  border: solid;
-  border: 2px;
   height: 100%;
-  margin: 15px
+  margin-left: 15px;
 }
 
 #solve-details {
@@ -234,8 +242,7 @@ button:focus-visible {
 }
 
 #create-details * {
-  margin: 10px
-
+  margin: 10px;
 }
 
 #solve-details * {
@@ -250,19 +257,93 @@ button:focus-visible {
 #newword-form {
   margin: 10px;
   margin-left: 0;
- 
+   
 }
 
 #newword-form button {
-  padding: 6px 7px
+  padding: 6px 7px;
+  background: #0B6623;
+  color: white
 }
+
+#newword-form button:hover {
+  background: #0c8900;
+  color: white;
+  border-color: #0c8900
+}
+
+
 
 #newword-form * {
   font-family: 'Inconsolata', monospace;
   font-size: 15px;
   margin: 7px;
-  color: black
+  color: black;
+  width: 160px;
+  min-height: 20px;
 
+}
+
+#addtopuzzle {
+  border-radius: 5px;
+  padding: 15px 7px;
+  background: var(--primary)
+}
+
+#addtopuzzle-instructions1 {
+  font-size: 18px
+}
+
+.smallfont {
+  font-size: 13px
+}
+
+#cluesuggestions-container, #wordsuggestions-container {
+  border: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 6px
+}
+
+#cluesuggestions-title, #wordsuggestions-title, #quicktools-title {
+  font-size: 18px;
+  font-weight: bold
+}
+
+/* #cluesuggestions-container button {
+  width: 200px
+} */
+
+#quicktools-container {
+  /* height: 200px; */
+  background: var(--primary);
+  padding: 10px;
+  border-radius: 5px
+}
+
+#quicktools-container * {
+  /* background: white; */
+  /* height: 50px; */
+  margin: 10px
+  /* width: 100px */
+}
+
+#clearword-button, #clearselectedcells-button {
+  background: white;
+  font-size: 13px
+}
+
+
+
+#deletepuzzle-button {
+  background: #8b0000;
+  color: white;
+  border: none;
+  /* font-size: 20px */
+}
+
+#deletepuzzle-button:hover {
+  background: #ff0000
 }
 
 #grid2 {
@@ -308,12 +389,6 @@ button:focus-visible {
   border: none
   /* height: 15px */
   /* font-weight: 600 */
-}
-
-#deletepuzzle-button:hover {
-  background: #8b0000;
-  color: white;
-  border: none
 }
 
 #clueedit-label {

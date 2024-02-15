@@ -263,11 +263,10 @@ def get_clue_suggestions(word):
 
     if request.method == "GET":
         clue = get_clue(word)
-        final_clue = f'"{clue}"'
-        # clueobj = {
-        #     "data": clue
-        # }
-        return final_clue, 200
+        clueobj = {
+            "data": clue
+        }
+        return clueobj, 200
 
     
 
