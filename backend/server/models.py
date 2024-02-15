@@ -84,7 +84,7 @@ class UPAttempt(db.Model, SerializerMixin):
     puzzle_id = Column(Integer, ForeignKey("puzzles.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    guesses = relationship("Guess", back_populates="upattempt")
+    guesses = relationship("Guess", back_populates="upattempt", cascade="all, delete-orphan")
     user = relationship("User", back_populates="upattempts")
 
     serialize_rules = ('-guesses.upattempt', '-user.upattempts',)

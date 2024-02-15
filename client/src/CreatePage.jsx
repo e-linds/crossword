@@ -9,7 +9,7 @@ import CreatedClue from "./CreatedClue"
 import _ from 'underscore'
 import { FormControlLabel } from "@mui/material";
 
-function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurrentTab }) {
+function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurrentTab, UPAttempts }) {
     const navigate = useNavigate()
     const location = useLocation()
     const [wordInput, setWordInput] = useState("")
@@ -164,7 +164,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
             const id = data.id
             const direction = data.direction
 
-            savedWords[savedWords.length + 1] = data
+            savedWords[Object.keys(savedWords).length + 1] = data
 
             let dict = savedClues
             dict[id] = clue
@@ -172,13 +172,17 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
 
             let dict2 = orderedPositions
             dict2.push([[row + column, row, column], id, direction])
-            setOrderedPositions(dict2)            
+            setOrderedPositions(dict2)         
+            
+            // assignNumberedCells()
 
         })} else {
 
             setRepeatWord(true)
         }}
     }
+
+    console.log(savedWords)
 
 
     //add the first word, which saves the puzzle and saves the word to that new puzzle
@@ -201,9 +205,12 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
         .then(r => r.json())
         .then(data => {
 
-            addWord(data.id)
-            setUserPuzzles([...userPuzzles, data])
-            navigate(`/create/${data.id}`)
+            
+            const newpuzzle = data
+            const newpuzzleid = data.id
+
+            addWord(newpuzzleid)
+            
 
             fetch(`/api/puzzles/${data.id}`, {
                 method: "PATCH",
@@ -215,11 +222,19 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
                 })
             })
             .then(r => r.json())
-            .then(data => console.log("name updated"))
+            .then(data => {
+                console.log("name updated")
+                setUserPuzzles([...userPuzzles, newpuzzle])
+                setPuzzleName(`New Puzzle No. ${newpuzzleid}`)
+
+
+            navigate(`/create/${newpuzzleid}`)})
 
         })
 
                 }
+
+    console.log(userPuzzles)
 
 
     function clearWord() {
@@ -280,13 +295,29 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
             setSelectedCells([])
 
             assignNumberedCells()
+
+            //if there is a current upattempt for this puzzle, need to find it and remove any guess instance which matches this word
+            
         
+            const thisattempt = UPAttempts.find((each) => each.puzzle_id === thispuzzleid)
+            const guesses = thisattempt.guesses
+            console.log(guesses)
+            const guessToClear = guesses.find((each) => each.row_index === rowToClear && each.column_index === columnToClear && each.direction === wordToClear.direction)
+            const id = guessToClear.id
+        
+            fetch(`/api/guesses/${id}`, {
+                method: "DELETE"
+            })
+            .then(r => console.log(r))
+          
         }
         )
     }
 
     console.log(savedWords)
-    console.log(letterPositions)
+    // console.log(letterPositions)
+
+    
 
 
     //this function creates the orderedPositions object
@@ -451,8 +482,12 @@ function createDisplayClues() {
         setSelectedCells([])
     }
 
-    console.log(orderedPositions)
-    console.log(selectedCells)
+    function saveExit() {
+        window.location.reload(true)
+    }
+
+    // console.log(orderedPositions)
+    // console.log(selectedCells)
 
 
     return(
@@ -467,7 +502,9 @@ function createDisplayClues() {
                 :
                 <h1 onDoubleClick={handlePuzzleEdit}>{puzzleName ? puzzleName : `New Puzzle ${thispuzzleid ? `No. ${thispuzzleid}` : ""}`}</h1>
                 }
+                <button id="save-button" onClick={saveExit}>SAVE & EXIT</button>
             </div>
+            
             <div id="clues-div">
                 <>
                 {displayClues.length > 0 ?

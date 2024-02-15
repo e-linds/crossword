@@ -130,6 +130,7 @@ button:focus-visible {
   display: grid;
   grid-template-rows: 1fr 4fr;
   grid-template-columns: 1fr 1fr;
+  height: 100px
  
 }
 
@@ -207,6 +208,23 @@ button:focus-visible {
   display: grid;
   grid-column-end: span 2;
   height: 150px;
+  grid-template-columns: 3fr 1fr;
+  align-items: center
+
+
+}
+
+#save-button {
+  width: 200px;
+  height: 70px;
+  font-size: 22px;
+  /* margin-left: 30px */
+  /* margin-left: 50px */
+}
+
+#save-button:hover {
+  background: #0B6623;
+  
 
 }
 

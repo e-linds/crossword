@@ -86,12 +86,14 @@ if __name__ == '__main__':
         Guess.query.delete()
         UPAttempt.query.delete()
 
+        db.session.commit()
+
         
         print("Starting seed...")
-        create_fake_users()
+        # create_fake_users()
         # create_words()
         # create_puzzles()
-        create_upattempts()
-        create_guesses()
+        # create_upattempts()
+        # create_guesses()
 
         print("Done!")

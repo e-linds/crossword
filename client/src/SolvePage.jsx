@@ -19,19 +19,27 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle, setCurrentTab 
     const [currentGuesses, setCurrentGuesses] = useState([])   
     const [showPopup, setShowPopup] = useState(false)
     const [accuracy, setAccuracy] = useState(false)
+    const [UPAttemptId, setUPAttemptId] = useState("")
 
 
     let letterPositions = {}
     let guessPositions = {}
 
+    console.log(puzzleWords)
+
 
     let { puzzleid } = useParams();
     const thispuzzleid = parseInt(Object.values({ puzzleid }))
     const thispuzzle = userPuzzles.find(each => each.id === thispuzzleid)
+
+    console.log(thispuzzleid)
     const existingAttempt = UPAttempts.find((each) => each.puzzle_id === thispuzzleid && each.user_id === user.id)
+    console.log(existingAttempt)
 
     createPositionsDict(puzzleWords, letterPositions)
     createPositionsDict(currentGuesses, guessPositions)
+
+    console.log(thispuzzle.words)
 
     useEffect(() => {
 
@@ -104,14 +112,51 @@ function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle, setCurrentTab 
     e.target["new-guess"].value = ""
     }
 
+    function postGuess(id) {
+
+        const new_guess = {
+            name: guessInput,
+            direction: getDirection(),
+            row_index: selectedCells[0][1],
+            column_index: selectedCells[0][2],
+            upattempt_id: id
+        }
+
+        fetch("/api/guesses", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(new_guess)
+        })
+        .then(r => r.json())
+        .then(data => {
+
+            setSelectedCells([])
+            setGuessInput("")
+            console.log("new guess")
+
+            setCurrentGuesses([...currentGuesses, data])
+
+            navigate(`/solve/${thispuzzleid}`)
+
+        })
+
+
+
+
+    }
+
 
 function addGuess() {
 
     if (guessInput.length === selectedCells.length) {
 
-    let attemptid
+    
     if (existingAttempt) {
-        attemptid = existingAttempt.id
+        setUPAttemptId(existingAttempt.id)
+
+        postGuess(existingAttempt.id)
 
     } else {
 
@@ -130,40 +175,16 @@ function addGuess() {
         .then(r => r.json())
         .then(data => {
             console.log(data)
-            attemptid = data.id
-            console.log(attemptid)
+            setUPAttemptId(data.id)
 
-            navigate(`/solve/${thispuzzleid}`)
+            postGuess(data.id)
         })
 
         }
 
-        if (attemptid) {
+        console.log(UPAttemptId)
 
-        const new_guess = {
-            name: guessInput,
-            direction: getDirection(),
-            row_index: selectedCells[0][1],
-            column_index: selectedCells[0][2],
-            upattempt_id: attemptid
-        }
-
-        fetch("/api/guesses", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(new_guess)
-        })
-        .then(r => r.json())
-        .then(data => {
-
-            setSelectedCells([])
-            setGuessInput("")
-
-            setCurrentGuesses([...currentGuesses, data])
-
-        })}}}
+        }}
 
         console.log(currentGuesses)
 
@@ -196,7 +217,7 @@ function addGuess() {
 
     function clearAllGuesses() {
 
-        fetch(`/api/upattempt/${existingAttempt.id}/guesses`, {
+        fetch(`/api/upattempt/${UPAttemptId}/guesses`, {
             method: "DELETE"
         })
         .then(r => console.log(r))
@@ -282,6 +303,13 @@ function addGuess() {
     
         }
 
+    console.log(letterPositions)
+    console.log(guessPositions)
+    console.log(currentGuesses)
+    console.log(existingAttempt)
+    console.log(puzzleWords)
+    console.log(UPAttemptId)
+
 
 
     function createDisplayClues() {
@@ -325,7 +353,7 @@ function handlePopupClose() {
 function clearPuzzleandExit() {
     handlePopupClose()
     clearAllGuesses()
-    navigate("/home")
+    window.location.reload(true)
 }
 
     
@@ -346,7 +374,7 @@ function clearPuzzleandExit() {
                 {accuracy ?
                     <DialogContent >
                         <DialogContentText>Congrats! All the words are correct!</DialogContentText>
-                        <Button onClick={handlePopupClose}>Save Results</Button>
+                        <Button onClick={handlePopupClose}>Stay on Page</Button>
                         <Button onClick={clearPuzzleandExit}>Clear and go home</Button>
                         </DialogContent>
                         :

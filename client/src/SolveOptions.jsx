@@ -4,10 +4,16 @@ import { Link, useLocation } from "react-router-dom"
 function SolveOptions({ userPuzzles, setCurrentTab }) {
     const location = useLocation()
 
+    const solve = location.pathname
+
     useEffect(() => {
-        setCurrentTab(location.pathname)
+        // window.location.reload(true);
+        setCurrentTab(solve)
 
     },[])
+
+    console.log(userPuzzles)
+
 
     return(
         <div>

@@ -49,6 +49,23 @@ function App() {
   useEffect(() => {
 
     if (user) {
+      fetch('/api/puzzles')
+      .then(r => r.json())
+      .then(data => {
+        let array = []
+        for (const each in data) {
+          if (data[each].user_id === user.id) {
+            array.push(data[each])
+          }
+        }
+        setUserPuzzles(array)
+      })
+  }
+  }, [])
+
+  useEffect(() => {
+
+    if (user) {
       fetch('/api/upattempts')
       .then(r => r.json())
       .then(data => {
@@ -62,6 +79,23 @@ function App() {
       })
   }
   }, [user])
+
+  useEffect(() => {
+
+    if (user) {
+      fetch('/api/upattempts')
+      .then(r => r.json())
+      .then(data => {
+        let array = []
+        for (const each in data) {
+          if (data[each].user_id === user.id) {
+            array.push(data[each])
+          }
+        }
+        setUPAttempts(array)
+      })
+  }
+  }, [])
 
   function deletePuzzle(id) {
 
@@ -77,6 +111,8 @@ function App() {
       let array = userPuzzles
       array.splice(index, 1)
       setUserPuzzles(array)
+
+      fetch(`/api/upattempts`)
     })
 
   }
@@ -89,8 +125,8 @@ function App() {
     <Header currentTab={currentTab} setCurrentTab={setCurrentTab}/>
     <Routes>
       <Route path='/home' element={<Home user={user} setUser={setUser}/>}/>
-      <Route path='/create' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles} setCurrentTab={setCurrentTab}/>}/>
-      <Route path='/create/:puzzleid' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles} deletePuzzle={deletePuzzle} setCurrentTab={setCurrentTab}/>}/>
+      <Route path='/create' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles} setCurrentTab={setCurrentTab} UPAttempts={UPAttempts}/>}/>
+      <Route path='/create/:puzzleid' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles} deletePuzzle={deletePuzzle} setCurrentTab={setCurrentTab} UPAttempts={UPAttempts}/>}/>
       <Route path='/createoptions' element={<CreateOptions userPuzzles={userPuzzles} setCurrentTab={setCurrentTab}/>}/>
       <Route path='/solveoptions' element={<SolveOptions userPuzzles={userPuzzles} UPAttempts={UPAttempts} setCurrentTab={setCurrentTab}/>}/>
       <Route path='/solve/:puzzleid' element={<SolvePage user={user} userPuzzles={userPuzzles} UPAttempts={UPAttempts} setCurrentTab={setCurrentTab}/>}/>
