@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import GridCellCreate from "./GridCellCreate"
 
-function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions, letterPositions, setLetterPositions}) {
+function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, orderedPositions, letterPositions, setLetterPositions, cellsReset }) {
 
     useEffect(() => {
         if (savedWords) {
@@ -73,6 +73,7 @@ function GridCreate ({ wordInput, selectedCells, setSelectedCells, savedWords, o
                         letterPositions={letterPositions}
                         setLetterPositions={setLetterPositions}
                         orderedPositions={orderedPositions}
+                        cellsReset={cellsReset}
                         />
                     })}
                     

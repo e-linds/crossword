@@ -26,8 +26,9 @@ button {
   /* transition: border-color 0.25s; */
 }
 button:hover {
-  border-color: #646cff;
-  background: var(--secondary)
+  border-color: black;
+  background: var(--secondary);
+  
 
 }
 button:focus,
@@ -266,7 +267,9 @@ button:focus-visible {
 }
 
 #solve-details * {
-  margin: 10px 0
+  margin: 10px 0;
+  float: right;
+  width: 80%
 }
 
 #solveclues {
@@ -284,9 +287,7 @@ button:focus-visible {
   padding: 6px 7px;
   background: white;
   font-size: 17px;
-  width: 200px;
-  font-weight: 200
- 
+  width: 200px; 
 }
 
 #newword-form button:hover {
@@ -295,12 +296,31 @@ button:focus-visible {
   border-color: #0c8900
 }
 
-#newguess-form button {
-  background: #0B6623;
-  color: white
+#newguess-form input {
+  float: right;
+  width: 80%
 }
 
-#newguess-form button:hover {
+#newguess-form button {
+  font-weight: 600;
+  border-radius: 5px;
+  float: right;
+  width: 80%
+}
+
+/* #newguess-form button:hover {
+  background: #0c8900;
+  color: white;
+  border-color: #0c8900
+} */
+
+#checkaccuracy-btn {
+  background: #0B6623;
+  color: white
+
+}
+
+#checkaccuracy-btn:hover {
   background: #0c8900;
   color: white;
   border-color: #0c8900

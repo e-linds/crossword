@@ -29,6 +29,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
     const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Word Suggestions")
     const [clueSuggestion, setClueSuggestion] = useState("")
     const [showClueSuggestion, setShowClueSuggestion] = useState(false)
+    const [cellsReset, setCellsReset] = useState(false)
 
 
     let { puzzleid } = useParams();
@@ -111,6 +112,8 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
             addFirstWord()
         }
     e.target["new-word"].value = ""
+    setCellsReset(!cellsReset)
+
     }
 
 //add a word, regardless of whether this is first word or additional - defaults to puzzle id being current id
@@ -265,7 +268,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
 
             //frontend clear word
 
-            let dict = savedWords
+            let dict = {...savedWords}
             delete dict[keyToClear]
             setSavedWords(dict)
 
@@ -279,19 +282,19 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
             const rowToClear = wordToClear.row_index
             const columnToClear = wordToClear.column_index
     
-            let dict2 = {...letterPositions}
-            let letterarray = wordToClear.name.split("")    
-            let count = 0
-            for (const each in letterarray) {
-                if (wordToClear.direction === "across") {
-                    delete dict2[`${rowToClear} ${columnToClear + count}`]
-                } else if (wordToClear.direction === "down") {
-                    delete dict2[`${rowToClear + count} ${columnToClear}`]
-                }
-                count = count + 1
-            }
+            // let dict2 = {...letterPositions}
+            // let letterarray = wordToClear.name.split("")    
+            // let count = 0
+            // for (const each in letterarray) {
+            //     if (wordToClear.direction === "across") {
+            //         delete dict2[`${rowToClear} ${columnToClear + count}`]
+            //     } else if (wordToClear.direction === "down") {
+            //         delete dict2[`${rowToClear + count} ${columnToClear}`]
+            //     }
+            //     count = count + 1
+            // }
 
-            setLetterPositions(dict2)
+            // setLetterPositions(dict2)
             setSelectedCells([])
 
             assignNumberedCells()
@@ -303,12 +306,16 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
             const guesses = thisattempt.guesses
             console.log(guesses)
             const guessToClear = guesses.find((each) => each.row_index === rowToClear && each.column_index === columnToClear && each.direction === wordToClear.direction)
-            const id = guessToClear.id
+            const id = guessToClear ? guessToClear.id : null
+
+            if (guessToClear) {
+                fetch(`/api/guesses/${id}`, {
+                    method: "DELETE"
+                })
+                .then(r => console.log(r))
+            }
         
-            fetch(`/api/guesses/${id}`, {
-                method: "DELETE"
-            })
-            .then(r => console.log(r))
+            
           
         }
         )
@@ -486,8 +493,8 @@ function createDisplayClues() {
         window.location.reload(true)
     }
 
-    // console.log(orderedPositions)
-    // console.log(selectedCells)
+    console.log(orderedPositions)
+    console.log(selectedCells)
 
 
     return(
@@ -528,6 +535,7 @@ function createDisplayClues() {
                 orderedPositions={orderedPositions}
                 letterPositions={letterPositions}
                 setLetterPositions={setLetterPositions}
+                cellsReset={cellsReset}
                 />
             </div>
             <div id="create-details">

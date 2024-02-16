@@ -20,6 +20,8 @@ function SolvePage({ user, userPuzzles, UPAttempts, setUPAttempts, setCurrentTab
     const [showPopup, setShowPopup] = useState(false)
     const [accuracy, setAccuracy] = useState(false)
     const [UPAttemptId, setUPAttemptId] = useState("")
+    const [cellsReset, setCellsReset] = useState(false)
+
 
 
     let letterPositions = {}
@@ -110,6 +112,7 @@ function SolvePage({ user, userPuzzles, UPAttempts, setUPAttempts, setCurrentTab
         addGuess()
 
     e.target["new-guess"].value = ""
+    setCellsReset(!cellsReset)
     }
 
     function postGuess(id) {
@@ -208,17 +211,18 @@ function addGuess() {
         })
         .then(r => {})
         .then(data => {
-            let array = currentGuesses
+            let array = [...currentGuesses]
             const index = array.indexOf(guessToClear)
             array.splice(index, 1)
             console.log(array)
             setCurrentGuesses(array)
+            setSelectedCells([])
         })    
     }
 
     function clearAllGuesses() {
 
-        fetch(`/api/upattempt/${UPAttemptId}/guesses`, {
+        fetch(`/api/upattempt/${UPAttemptId ? UPAttemptId : existingAttempt.id}/guesses`, {
             method: "DELETE"
         })
         .then(r => console.log(r))
@@ -371,7 +375,7 @@ function clearPuzzleandExit() {
                     </form>  
                 <button onClick={clearGuess}>Clear word from the board (select cells first)</button>
                 <button onClick={clearAllGuesses}>Clear the whole board</button>
-                <button onClick={checkAccuracy}>Check Accuracy</button>
+                <button onClick={checkAccuracy} id="checkaccuracy-btn">Check Accuracy</button>
                 <Dialog id="accuracypopup" open={showPopup} onClose={handlePopupClose}>
                 {accuracy ?
                     <DialogContent >
@@ -398,6 +402,7 @@ function clearPuzzleandExit() {
             guessPositions={guessPositions}
             currentGuesses={currentGuesses}
             letterPositions={letterPositions}
+            cellsReset={cellsReset}
             />
             <div id="solveclues">
             <h2>Clues</h2>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCells, wordInput, letterPositions, orderedPositions, savedWords }) {
+function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCells, wordInput, letterPositions, orderedPositions, savedWords, cellsReset }) {
     const [selected, setSelected] = useState(false)
     const [letter, setLetter] = useState("")
     const [cellNumber, setCellNumber] = useState("")
@@ -21,18 +21,20 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
         addLetters()
     }, [wordInput, savedWords])
 
+    useEffect(() => {
+        setSelected(false)
+    },[cellsReset])
+
 
     let cellStyle
 //these if/elses set the blue background and create borders on sides of the grid
     if (selected === false || selectedCells.length === 0) {
         cellStyle = {
             backgroundColor: "white",
-            borderWidth: "1px"
         }
     } else if (selected && selectedCells.find(each => each[1] === position[1] && each[2] === position[2])) {
         cellStyle = {
             backgroundColor: "#9DCEFC",
-            borderWidth: "1px"
         }
     }
 
@@ -66,6 +68,7 @@ function GridCellCreate({ row_index, column_index, selectedCells, setSelectedCel
 
     function handleCellClick() {
         setSelected(!selected)
+        console.log(position, selected)
         //sum of row index plus column index is [0] in position for easier sorting later
         if (selectedCells) {
 

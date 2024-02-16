@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 
 
-function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCells, guessInput, letterPositions, orderedPositions, guessPositions}) {
+function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCells, guessInput, letterPositions, orderedPositions, guessPositions, cellsReset={cellsReset}}) {
     const [selected, setSelected] = useState(false)
     const [letterExists, setLetterExists] = useState(false)
     const [guessLetter, setGuessLetter] = useState("")
@@ -21,6 +21,11 @@ function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCell
         addLetters()
     }, [guessInput])
 
+    useEffect(() => {
+        setSelected(false)
+
+    }, [cellsReset])
+
     // console.log(letterPositions)
 
     
@@ -34,11 +39,11 @@ function GridCellSolve({ row_index, column_index, selectedCells, setSelectedCell
 
     } else if (selected === false || selectedCells.length === 0) {
         cellStyle = {
-            backgroundColor: "white"
+            backgroundColor: "white",
         }
-    } else if (selected) {
+    } else if (selected && selectedCells.find(each => each[1] === position[1] && each[2] === position[2])) {
         cellStyle = {
-            backgroundColor: "#9DCEFC"
+            backgroundColor: "#9DCEFC",
         }
     }
 

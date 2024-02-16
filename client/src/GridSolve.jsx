@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import GridCellSolve from "./GridCellSolve"
 
-function GridSolve ({ guessInput, selectedCells, setSelectedCells, puzzleWords, orderedPositions, guessPositions, letterPositions, currentGuesses }) {
+function GridSolve ({ guessInput, selectedCells, setSelectedCells, puzzleWords, orderedPositions, guessPositions, letterPositions, currentGuesses, cellsReset }) {
 
   
     const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", 'j', 'k', "l", "m", "n", "o", "p", "q", "r"]
@@ -28,6 +28,7 @@ function GridSolve ({ guessInput, selectedCells, setSelectedCells, puzzleWords, 
                         currentGuesses={currentGuesses}
                         guessPositions={guessPositions}
                         puzzleWords={puzzleWords}
+                        cellsReset={cellsReset}
                         />
                     })}
                     
