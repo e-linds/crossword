@@ -26,7 +26,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
     const [repeatWord, setRepeatWord] = useState(false)
     const [wordSuggestions, setWordSuggestions] = useState({})
     const [showWordSuggestions, setShowWordSuggestions] = useState(false)
-    const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Words")
+    const [suggestionButtonContent, setSuggestionButtonContent] = useState("Get Word Suggestions")
     const [clueSuggestion, setClueSuggestion] = useState("")
     const [showClueSuggestion, setShowClueSuggestion] = useState(false)
 
@@ -118,7 +118,7 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
 
         setShowWordSuggestions(false)
         setShowClueSuggestion(false)
-        setSuggestionButtonContent("Get Words")
+        setSuggestionButtonContent("Get Word Suggestions")
         setWordSuggestions({})
 
         if (wordInput.length > 1) {
@@ -381,7 +381,7 @@ function createDisplayClues() {
         if (thispuzzleid) {
             deletePuzzle(thispuzzleid)
         }
-
+        setCurrentTab("/home")
         navigate("/home")
     }
 
@@ -517,20 +517,6 @@ function createDisplayClues() {
                 :
                 <h3>Clues will display here</h3>
                 }
-                <div id="quicktools-container">
-                    <p id="quicktools-title">Quick Tools</p>
-                    <button onClick={clearWord} id="clearword-button"><b>Clear a saved word</b>(select all its cells then click here)</button>
-                    <button onClick={clearSelectedCells} id="clearselectedcells-button"><b>Clear all selected cells</b></button>
-
-                    <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
-                    <Dialog id="deletepopup" open={showDeletePopup} onClose={handleDeleteClose}>
-                            <DialogContent >
-                                <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
-                                <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
-                                <Button onClick={handleDeleteClose}>Actually, never mind</Button>
-                            </DialogContent>
-                    </Dialog>
-                </div>
                 </>
             </div>
             <div >
@@ -561,9 +547,22 @@ function createDisplayClues() {
                 </Dialog>
                     </form>  
                 </div>
+                <div id="quicktools-container">
+                    <button onClick={clearWord} id="clearword-button">Clear a saved word (select cells first)</button>
+                    <button onClick={clearSelectedCells} id="clearselectedcells-button">Clear all selected cells</button>
+
+                    <button id="deletepuzzle-button" onClick={() => setShowDeletePopup(true)}>{"Delete Puzzle :("}</button>
+                    <Dialog id="deletepopup" open={showDeletePopup} onClose={handleDeleteClose}>
+                            <DialogContent >
+                                <DialogContentText>Are you sure you'd like to delete? This is not reversible.</DialogContentText>
+                                <Button onClick={deleteThisPuzzle}>Yes I'm sure</Button>
+                                <Button onClick={handleDeleteClose}>Actually, never mind</Button>
+                            </DialogContent>
+                    </Dialog>
+                </div>
                 <div id="wordsuggestions-container">
-                        <p id="wordsuggestions-title">Word Suggestions</p>
-                        <p className="smallfont">Sourced from bestwordlist.com</p>
+                        {/* <p id="wordsuggestions-title">Word Suggestions</p> */}
+                        
                         <button onClick={handleWordSuggestionsClick}>{suggestionButtonContent}</button>
                         <div>{showWordSuggestions ? 
                         <div>
@@ -591,12 +590,13 @@ function createDisplayClues() {
                             </div>
                         :
                         null}
+                        <p className="smallfont">Sourced from bestwordlist.com</p>
                         </div>
                     </div>
                     <div id="cluesuggestions-container">
-                        <p id="cluesuggestions-title">Clue Suggestions</p>
-                        <p className="smallfont">Powered By OpenAI</p>
-                        <button onClick={getClueSuggestion}>Get Clue</button>
+                        {/* <p id="cluesuggestions-title">Clue Suggestions</p> */}
+                        
+                        <button onClick={getClueSuggestion}>Get Clue Suggestion</button>
                         {showClueSuggestion ? 
                         <>
                         <div>{clueSuggestion}</div>
@@ -604,6 +604,7 @@ function createDisplayClues() {
                         </>
                         :
                         null}
+                        <p className="smallfont">Powered By OpenAI</p>
                     </div>
             </div>
         </main>

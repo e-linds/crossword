@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
 
-function SolvePage({ user, userPuzzles, UPAttempts, deletePuzzle, setCurrentTab }) {
+function SolvePage({ user, userPuzzles, UPAttempts, setUPAttempts, setCurrentTab }) {
     const navigate = useNavigate()
     const location = useLocation()
     const [guessInput, setGuessInput] = useState("")
@@ -175,6 +175,7 @@ function addGuess() {
         .then(r => r.json())
         .then(data => {
             console.log(data)
+            setUPAttempts([...UPAttempts, data])
             setUPAttemptId(data.id)
 
             postGuess(data.id)
@@ -363,12 +364,13 @@ function clearPuzzleandExit() {
                 <div> </div>
                 <h1 id="solvepuzzletitle">{thispuzzle.name}</h1>
                 <div id="solve-details">
-                    <form id="newword-form" onSubmit={handleSubmit}>
+                    <form id="newguess-form" onSubmit={handleSubmit}>
                         <input name="new-guess" placeholder="Enter Guess Here" onChange={handleGuessTyping}></input>
+                        <br></br>
                         <button type="submit">Confirm Guess</button>
                     </form>  
-                <button onClick={clearGuess}>To clear a word from the board, select all its cells, then click this button</button>
-                <button onClick={clearAllGuesses}>To clear the whole board, click here</button>
+                <button onClick={clearGuess}>Clear word from the board (select cells first)</button>
+                <button onClick={clearAllGuesses}>Clear the whole board</button>
                 <button onClick={checkAccuracy}>Check Accuracy</button>
                 <Dialog id="accuracypopup" open={showPopup} onClose={handlePopupClose}>
                 {accuracy ?

@@ -112,7 +112,16 @@ function App() {
       array.splice(index, 1)
       setUserPuzzles(array)
 
-      fetch(`/api/upattempts`)
+      console.log(UPAttempts)
+
+      const attemptToDelete = UPAttempts.find(each => each.puzzle_id === id)
+    
+      fetch(`/api/upattempt/${attemptToDelete.id}`, {
+            method: "DELETE"
+          })
+          .then(r => console.log(r))
+
+      
     })
 
   }
@@ -129,7 +138,7 @@ function App() {
       <Route path='/create/:puzzleid' element={<CreatePage user={user} userPuzzles={userPuzzles} setUserPuzzles={setUserPuzzles} deletePuzzle={deletePuzzle} setCurrentTab={setCurrentTab} UPAttempts={UPAttempts}/>}/>
       <Route path='/createoptions' element={<CreateOptions userPuzzles={userPuzzles} setCurrentTab={setCurrentTab}/>}/>
       <Route path='/solveoptions' element={<SolveOptions userPuzzles={userPuzzles} UPAttempts={UPAttempts} setCurrentTab={setCurrentTab}/>}/>
-      <Route path='/solve/:puzzleid' element={<SolvePage user={user} userPuzzles={userPuzzles} UPAttempts={UPAttempts} setCurrentTab={setCurrentTab}/>}/>
+      <Route path='/solve/:puzzleid' element={<SolvePage user={user} userPuzzles={userPuzzles} UPAttempts={UPAttempts} setCurrentTab={setCurrentTab} setUPAttempts={setUPAttempts}/>}/>
       <Route path='/myaccount' element={<MyAccount user={user} setUser={setUser} userPuzzles={userPuzzles} setCurrentTab={setCurrentTab}/>}/>
       {/* <Route path="*" element={<Navigate to="/home" />} /> */}
     </Routes>

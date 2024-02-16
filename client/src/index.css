@@ -208,22 +208,24 @@ button:focus-visible {
   display: grid;
   grid-column-end: span 2;
   height: 150px;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 4fr 1fr;
   align-items: center
 
 
 }
 
 #save-button {
-  width: 200px;
-  height: 70px;
-  font-size: 22px;
-  /* margin-left: 30px */
-  /* margin-left: 50px */
+  width: 170px;
+  height: 60px;
+  font-size: 21px;
+  background: #0B6623;
+  color: white
 }
 
 #save-button:hover {
-  background: #0B6623;
+  background: #0c8900;
+  color: white;
+  border-color: #0c8900
   
 
 }
@@ -272,7 +274,7 @@ button:focus-visible {
 
 }
 
-#newword-form {
+#newword-form, #newguess-form input {
   margin: 10px;
   margin-left: 0;
    
@@ -280,8 +282,11 @@ button:focus-visible {
 
 #newword-form button {
   padding: 6px 7px;
-  background: #0B6623;
-  color: white
+  background: white;
+  font-size: 17px;
+  width: 200px;
+  font-weight: 200
+ 
 }
 
 #newword-form button:hover {
@@ -290,9 +295,26 @@ button:focus-visible {
   border-color: #0c8900
 }
 
+#newguess-form button {
+  background: #0B6623;
+  color: white
+}
+
+#newguess-form button:hover {
+  background: #0c8900;
+  color: white;
+  border-color: #0c8900
+}
 
 
-#newword-form * {
+#solve-details button {
+  max-width: 300px
+}
+
+
+
+
+#newword-form *, #newguess-form * {
   font-family: 'Inconsolata', monospace;
   font-size: 15px;
   margin: 7px;
@@ -342,7 +364,7 @@ button:focus-visible {
 #quicktools-container * {
   /* background: white; */
   /* height: 50px; */
-  margin: 10px
+  margin: 10px;
   /* width: 100px */
 }
 
