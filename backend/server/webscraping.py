@@ -128,9 +128,9 @@ def get_words(length, letter="000", index=999, ):
     for each in suggestions_array:
         frequency = filter_words(each)
         if frequency:
-            if frequency <= 0.1:
+            if frequency < 0.1:
                 filtered_words_hard.append(each)
-            elif 0.1 < frequency <= 1:
+            elif 0.1 <= frequency <= 1:
                 filtered_words_medium.append(each)
             elif frequency > 1:
                 filtered_words_easy.append(each)

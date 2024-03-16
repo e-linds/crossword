@@ -365,7 +365,6 @@ function CreatePage({ user, userPuzzles, setUserPuzzles, deletePuzzle, setCurren
                 wordDirectionInfo[each].push(count)
 
             }}
-            // console.log(wordDirectionInfo)
 
         setOrderedPositions(wordDirectionInfo)
         }}
@@ -493,8 +492,11 @@ function createDisplayClues() {
         window.location.reload(true)
     }
 
+    
+    console.log(savedWords)
     console.log(orderedPositions)
-    console.log(selectedCells)
+    console.log(letterPositions)
+
 
 
     return(
@@ -517,6 +519,7 @@ function createDisplayClues() {
                 {displayClues.length > 0 ?
                 <>
                 <h2>Clues</h2>
+                <p>(Click to edit)</p>
                 {displayClues.map((each) => {
                     return <CreatedClue key={each} text={each} savedClues={savedClues} savedWords={savedWords}/>
                 })}
