@@ -78,7 +78,11 @@ function Home({ user, setUser }) {
         <div id="home-container">
             {user ? 
             <>
-            <h1>Welcome, {user.name}</h1>
+            { user.name ?
+            <h1>Welcome, {user.name}!</h1>
+            :
+            <h1>Welcome!</h1>
+             }
             <h2>Hmm, I wonder what those buttons up there do</h2>
             </>
             :

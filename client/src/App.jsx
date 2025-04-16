@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 
+
 import './App.css'
 import CreatePage from "./CreatePage"
 import SolvePage from "./SolvePage"
