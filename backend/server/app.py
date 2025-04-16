@@ -5,6 +5,7 @@ from config import app, db
 from models import *
 from webscraping import get_words, filter_words
 from openaiclues import get_clue
+from ddtrace import tracer
 
 @app.route('/signup', methods = ["POST"])
 def signup():
@@ -35,7 +36,7 @@ def check_session():
             return user.to_dict(), 200
         else:
             return {"Error": "unauthorized"}, 401
-        
+            
 @app.route('/login', methods = ["POST"])
 def login():
     if request.method == "POST":
@@ -58,9 +59,13 @@ def logout():
             return {}, 204
 
         return {"error": "not logged in"}, 401
-    
+
 @app.route('/words', methods = ["GET", "POST"])
+@tracer.wrap()
 def words():
+    span = tracer.current_span()
+    span.set_tag("tagkey", "tagvalue")
+
     words = Word.query.all()
 
     if request.method == "GET":
@@ -68,7 +73,7 @@ def words():
         for each in words:
             all_words.append(each.to_dict())
         return all_words, 200
-    
+        
     if request.method == "POST":
         data = request.get_json()
         new_word = Word(
@@ -82,6 +87,8 @@ def words():
         db.session.add(new_word)
         db.session.commit()
         return new_word.to_dict(), 201
+        
+       
     
 @app.route('/words/<int:id>', methods = ["GET", "PATCH", "DELETE"])
 def word_by_id(id):
@@ -108,28 +115,28 @@ def word_by_id(id):
             return {"error": "unable to delete"}, 400
 
     
-
 @app.route('/puzzles', methods = ["GET", "POST"])
-def puzzles():
-    puzzles = Puzzle.query.all()
+def puzzles():    
+        puzzles = Puzzle.query.all()
 
-    if request.method == "GET":
-        all_puzzles = []
-        for each in puzzles:
-            all_puzzles.append(each.to_dict())
-        return all_puzzles, 200
+        if request.method == "GET":
+            all_puzzles = []
+            for each in puzzles:
+                all_puzzles.append(each.to_dict())
+            return all_puzzles, 200
+        
+        if request.method == "POST":
+            data = request.get_json()
+            new_puzzle = Puzzle(
+                name = data.get("name"),
+                user_id = data.get("user_id")
+                
+            )
+            db.session.add(new_puzzle)
+            db.session.commit()
+            return new_puzzle.to_dict(), 201
     
-    if request.method == "POST":
-        data = request.get_json()
-        new_puzzle = Puzzle(
-            name = data.get("name"),
-            user_id = data.get("user_id")
-            
-        )
-        db.session.add(new_puzzle)
-        db.session.commit()
-        return new_puzzle.to_dict(), 201
-    
+
 
 @app.route('/puzzles/<int:id>', methods = ["GET", "PATCH", "DELETE"])
 def puzzle_by_id(id):
